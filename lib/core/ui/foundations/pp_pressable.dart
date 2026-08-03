@@ -3,9 +3,12 @@ import 'package:flutter/rendering.dart';
 
 import '../../theme/theme.dart';
 
-/// Universal press affordance: scale 0.97 at [PPMotion.instant] with
-/// [PPMotion.standard]. No ripple — the design system uses scale + fill
-/// swaps only. Guarantees a >=44px hit target via [PPTapTarget].
+/// Universal press affordance from the design system's interaction spec
+/// (D1 sheet: "Press: scale 0.97, --duration-instant + --ease-standard",
+/// no ripple). The 0.97 scale factor is design-specified geometry with no
+/// CSS custom property (human ruling 2026-08-03: spec literals with
+/// documented provenance). Guarantees a >=44px hit target via
+/// [PPTapTarget].
 class PPPressable extends StatefulWidget {
   const PPPressable({
     super.key,
