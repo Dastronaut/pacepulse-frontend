@@ -4,3 +4,5 @@ library;
 
 export 'foundations/pp_icon.dart';
 export 'foundations/pp_pressable.dart';
+export 'foundations/pp_motion_utils.dart';
+export 'foundations/pp_skeleton.dart';
