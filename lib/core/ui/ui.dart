@@ -3,3 +3,4 @@
 library;
 
 export 'foundations/pp_icon.dart';
+export 'foundations/pp_pressable.dart';
