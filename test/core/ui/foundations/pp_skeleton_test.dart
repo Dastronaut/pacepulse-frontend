@@ -49,4 +49,77 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
     expect(_skeletonColor(tester), PPColors.dark.skeletonBase);
   });
+
+  testWidgets('live toggle to reduced motion resets to static base',
+      (tester) async {
+    bool reducedMotionOn = false;
+    final key = GlobalKey();
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          return MaterialApp(
+            theme: ppLightTheme(),
+            darkTheme: ppDarkTheme(),
+            themeMode: ThemeMode.dark,
+            builder: (context, w) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                disableAnimations: reducedMotionOn,
+              ),
+              child: w!,
+            ),
+            home: Scaffold(
+              body: Center(
+                child: GestureDetector(
+                  onTap: () => setState(() => reducedMotionOn = true),
+                  child: PPSkeleton(
+                    key: key,
+                    width: 120,
+                    height: 16,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    // Start animating with reduced motion OFF
+    await tester.pump(const Duration(milliseconds: 700)); // half cycle
+    final colorMidShimmer = _skeletonColor(tester);
+    expect(colorMidShimmer, isNot(PPColors.dark.skeletonBase));
+
+    // Toggle reduced motion ON by rebuilding with new state
+    reducedMotionOn = true;
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          return MaterialApp(
+            theme: ppLightTheme(),
+            darkTheme: ppDarkTheme(),
+            themeMode: ThemeMode.dark,
+            builder: (context, w) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                disableAnimations: reducedMotionOn,
+              ),
+              child: w!,
+            ),
+            home: Scaffold(
+              body: Center(
+                child: PPSkeleton(
+                  key: key,
+                  width: 120,
+                  height: 16,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    // After toggle, color should be static base
+    expect(_skeletonColor(tester), PPColors.dark.skeletonBase);
+  });
 }

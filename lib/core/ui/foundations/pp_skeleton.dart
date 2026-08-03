@@ -20,6 +20,7 @@ class PPSkeleton extends StatefulWidget {
 
 class _PPSkeletonState extends State<PPSkeleton> with TickerProviderStateMixin {
   late AnimationController _controller;
+  late CurvedAnimation _curvedAnimation;
   late ColorTween _colorTween;
 
   @override
@@ -29,13 +30,17 @@ class _PPSkeletonState extends State<PPSkeleton> with TickerProviderStateMixin {
       vsync: this,
       duration: PPMotion.shimmerPeriod,
     );
+    _curvedAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: PPMotion.pulse,
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (ppReducedMotion(context)) {
-      _controller.stop();
+      _controller..stop()..value = 0;
     } else if (!_controller.isAnimating) {
       _controller.repeat(reverse: true);
     }
@@ -50,6 +55,7 @@ class _PPSkeletonState extends State<PPSkeleton> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final pp = Theme.of(context).extension<PPColors>()!;
+    final reduced = ppReducedMotion(context);
     _colorTween = ColorTween(
       begin: pp.skeletonBase,
       end: pp.skeletonHighlight,
@@ -62,9 +68,9 @@ class _PPSkeletonState extends State<PPSkeleton> with TickerProviderStateMixin {
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            color: _colorTween.evaluate(
-              AlwaysStoppedAnimation(_controller.value),
-            ),
+            color: reduced
+                ? pp.skeletonBase
+                : _colorTween.evaluate(_curvedAnimation),
             borderRadius: BorderRadius.circular(widget.radius),
           ),
         );
