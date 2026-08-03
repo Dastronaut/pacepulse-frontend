@@ -5,6 +5,11 @@ import 'pp_motion_utils.dart';
 
 /// 8px live indicator dot: opacity 1<->0.55 + scale 1<->0.82 over
 /// [PPMotion.liveDotPeriod]. Reduced motion: static full dot.
+///
+/// The 8px dot and 0.55/0.82 pulse factors come from the design system's
+/// motion spec (pp-live-dot keyframes, D1 sheet) — design-specified geometry
+/// with no CSS custom property (human ruling 2026-08-03: spec literals with
+/// documented provenance).
 class PPLiveDot extends StatefulWidget {
   const PPLiveDot({super.key, this.size = 8});
 

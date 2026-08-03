@@ -7,6 +7,11 @@ import 'pp_motion_utils.dart';
 /// painted because Flutter can't animate a box-shadow ring the same
 /// way). loop=true repeats forever; changing [pulseToken] plays exactly
 /// one cycle. Reduced motion: static 2px liveRing ring.
+///
+/// The 0→10px spread over 1.6s and 2px liveRing static fallback come from
+/// the design system's motion spec (pp-live-pulse keyframes, D1 sheet) —
+/// design-specified geometry with no CSS custom property (human ruling
+/// 2026-08-03: spec literals with documented provenance).
 class PPLivePulse extends StatefulWidget {
   const PPLivePulse({
     super.key,
