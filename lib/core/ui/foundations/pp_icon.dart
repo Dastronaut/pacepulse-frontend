@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// Icon sizes from the design system: 20 / 24 / 28 on the 4px grid.
+/// Icon sizes from the design system's iconography spec (D1 sheet /
+/// asset inventory): Lucide at 20 / 24 / 28 on the 4px grid. These are
+/// design-specified geometry — the DS ships no CSS custom property for
+/// icon sizes, so this enum IS their single source of truth in code
+/// (human ruling 2026-08-03: spec literals with documented provenance).
 enum PPIconSize {
   s20(20),
   s24(24),
