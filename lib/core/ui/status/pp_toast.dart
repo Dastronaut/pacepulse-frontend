@@ -110,8 +110,12 @@ class _PPToast extends StatelessWidget {
             color: Colors.transparent,
             child: Container(
               key: const Key('pp_toast_box'),
+              // Vertical padding trimmed to s2 (was s3): the action link's
+              // 44px tap target (PPSpacing.tapMin) now sets the Row's
+              // height, so full s3 padding would bloat the toast well past
+              // the ~48px Material snackbar baseline.
               padding: const EdgeInsets.symmetric(
-                  vertical: PPSpacing.s3, horizontal: PPSpacing.s4),
+                  vertical: PPSpacing.s2, horizontal: PPSpacing.s4),
               decoration: BoxDecoration(
                 color: bg,
                 borderRadius: BorderRadius.circular(PPRadius.md),
@@ -130,13 +134,21 @@ class _PPToast extends StatelessWidget {
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: onAction,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: PPSpacing.s2),
-                        child: Text(
-                          actionLabel!,
-                          style: theme.textTheme.labelLarge!
-                              .copyWith(color: action),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: PPSpacing.tapMin,
+                          minHeight: PPSpacing.tapMin,
+                        ),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: PPSpacing.s2),
+                            child: Text(
+                              actionLabel!,
+                              style: theme.textTheme.labelLarge!
+                                  .copyWith(color: action),
+                            ),
+                          ),
                         ),
                       ),
                     ),

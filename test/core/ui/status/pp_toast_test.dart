@@ -60,4 +60,35 @@ void main() {
         PPPalette.ember);
     await tester.pump(const Duration(seconds: 5));
   });
+
+  testWidgets('action link has a real 44px tap target (offset tap fires)',
+      (tester) async {
+    var actionFired = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ppLightTheme(),
+        darkTheme: ppDarkTheme(),
+        themeMode: ThemeMode.dark,
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => Center(
+              child: TextButton(
+                onPressed: () => showPPToast(context,
+                    message: 'Workout saved',
+                    actionLabel: 'View',
+                    onAction: () => actionFired = true),
+                child: const Text('go'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('go'));
+    await tester.pump(const Duration(milliseconds: 250));
+    await tester.tapAt(
+        tester.getCenter(find.text('View')) + const Offset(0, -14));
+    expect(actionFired, isTrue);
+    await tester.pump(const Duration(seconds: 5));
+  });
 }
