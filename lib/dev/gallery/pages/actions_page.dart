@@ -4,8 +4,16 @@ import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
 import '../gallery.dart';
 
-class ActionsGalleryPage extends StatelessWidget {
+class ActionsGalleryPage extends StatefulWidget {
   const ActionsGalleryPage({super.key});
+
+  @override
+  State<ActionsGalleryPage> createState() => _ActionsGalleryPageState();
+}
+
+class _ActionsGalleryPageState extends State<ActionsGalleryPage> {
+  int _normalIndex = 0;
+  int _smallIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +75,37 @@ class ActionsGalleryPage extends StatelessWidget {
                 PPStartFab(onPressed: () {}),
                 PPStartFab(onPressed: () {}, extendedLabel: 'Start workout'),
               ]),
+        ),
+        GallerySection(
+          title: 'PPSegmentedControl',
+          child: Column(
+            spacing: PPSpacing.s3,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Normal (Run/Ride/Gym)',
+                  style: Theme.of(context).textTheme.labelSmall),
+              SizedBox(
+                width: 300,
+                child: PPSegmentedControl(
+                  segments: const ['Run', 'Ride', 'Gym'],
+                  selectedIndex: _normalIndex,
+                  onChanged: (i) => setState(() => _normalIndex = i),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text('Small (W/M/6M/Y)',
+                  style: Theme.of(context).textTheme.labelSmall),
+              SizedBox(
+                width: 300,
+                child: PPSegmentedControl(
+                  segments: const ['W', 'M', '6M', 'Y'],
+                  selectedIndex: _smallIndex,
+                  onChanged: (i) => setState(() => _smallIndex = i),
+                  small: true,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

@@ -12,3 +12,4 @@ export 'foundations/pp_spinner.dart';
 export 'actions/pp_button.dart';
 export 'actions/pp_icon_button.dart';
 export 'actions/pp_fab.dart';
+export 'actions/pp_segmented_control.dart';
