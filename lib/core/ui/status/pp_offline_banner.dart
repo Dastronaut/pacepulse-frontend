@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 import '../foundations/pp_icon.dart';
 
-/// Offline strip (D1-E4): sits under the app bar, factual tone, never
-/// alarmist. Full-width, no radius. Show/hide animation belongs to the
-/// consumer (e.g. AnimatedSwitcher / slide at screen level). Height
-/// 44px (tapMin token) + dashed bottom hairline in light mode only (D1
-/// spec literal; human ruling 2026-08-03: documented provenance).
+/// Offline strip (D1-E4): full-width 44px (PPSpacing.tapMin), no radius,
+/// factual tone. Light theme adds a SOLID bottom hairline
+/// (outlineVariant); dark uses the elevated surface step. Sizing and
+/// colors come entirely from existing tokens — no new spec literals in
+/// this widget.
 class PPOfflineBanner extends StatelessWidget {
   const PPOfflineBanner(
       {super.key, this.message = "You're offline — showing saved data"});
