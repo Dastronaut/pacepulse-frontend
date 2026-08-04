@@ -66,6 +66,63 @@ class StatusGalleryPage extends StatelessWidget {
             ),
           ]),
         ),
+        const GallerySection(
+          title: 'PPIllustration',
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('Onboarding - Ember'),
+            SizedBox(height: PPSpacing.s2),
+            PPIllustration(
+              name: 'welcome',
+              size: PPIllustrationSize.onboarding,
+              accent: PPIllustrationAccent.ember,
+            ),
+            SizedBox(height: PPSpacing.s4),
+            Text('Onboarding - Warning'),
+            SizedBox(height: PPSpacing.s2),
+            PPIllustration(
+              name: 'alert',
+              size: PPIllustrationSize.onboarding,
+              accent: PPIllustrationAccent.warning,
+            ),
+            SizedBox(height: PPSpacing.s4),
+            Text('Empty - Ember'),
+            SizedBox(height: PPSpacing.s2),
+            PPIllustration(
+              name: 'empty_workouts',
+              size: PPIllustrationSize.empty,
+              accent: PPIllustrationAccent.ember,
+            ),
+            SizedBox(height: PPSpacing.s4),
+            Text('Empty - Warning'),
+            SizedBox(height: PPSpacing.s2),
+            PPIllustration(
+              name: 'no_data',
+              size: PPIllustrationSize.empty,
+              accent: PPIllustrationAccent.warning,
+            ),
+          ]),
+        ),
+        GallerySection(
+          title: 'Empty / error states',
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            const Text('Empty State'),
+            const SizedBox(height: PPSpacing.s2),
+            PPEmptyState(
+              title: 'No workouts yet',
+              body: 'Your first run shows up here.',
+              actionLabel: 'Start a run',
+              onAction: () {},
+            ),
+            const SizedBox(height: PPSpacing.s4),
+            const Text('Error State'),
+            const SizedBox(height: PPSpacing.s2),
+            PPErrorState(
+              title: "Couldn't load history",
+              body: 'Check your connection and try again.',
+              onRetry: () {},
+            ),
+          ]),
+        ),
       ],
     );
   }
