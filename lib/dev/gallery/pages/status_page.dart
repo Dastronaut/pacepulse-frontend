@@ -48,6 +48,24 @@ class StatusGalleryPage extends StatelessWidget {
                 ),
               ]),
         ),
+        const GallerySection(
+          title: 'PPOfflineBanner',
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            PPOfflineBanner(),
+            SizedBox(height: PPSpacing.s3),
+            PPOfflineBanner(message: 'Reconnecting...'),
+          ]),
+        ),
+        const GallerySection(
+          title: 'PPBannerAdSlot',
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            PPBannerAdSlot(),
+            SizedBox(height: PPSpacing.s3),
+            PPBannerAdSlot(
+              ad: ColoredBox(color: Color(0xFF3FD98B)),
+            ),
+          ]),
+        ),
       ],
     );
   }
