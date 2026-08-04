@@ -70,78 +70,46 @@ class ActionsGalleryPage extends StatelessWidget {
         ),
         GallerySection(
           title: 'PPSegmentedControl',
-          child: StatefulBuilder(
-            builder: (context, setState) => Column(
-              spacing: PPSpacing.s3,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Normal (Run/Ride/Gym)',
-                    style: Theme.of(context).textTheme.labelSmall),
-                SizedBox(
-                  width: 300,
-                  child: _NormalSegmentedDemo(onChanged: (_) => setState(() {})),
+          child: Column(
+            spacing: PPSpacing.s3,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Normal (Run/Ride/Gym)',
+                  style: Theme.of(context).textTheme.labelSmall),
+              SizedBox(
+                width: 300,
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    int index = 0;
+                    return PPSegmentedControl(
+                      segments: const ['Run', 'Ride', 'Gym'],
+                      selectedIndex: index,
+                      onChanged: (i) => setState(() => index = i),
+                    );
+                  },
                 ),
-                SizedBox(height: PPSpacing.s4),
-                Text('Small (W/M/6M/Y)',
-                    style: Theme.of(context).textTheme.labelSmall),
-                SizedBox(
-                  width: 300,
-                  child: _SmallSegmentedDemo(onChanged: (_) => setState(() {})),
+              ),
+              SizedBox(height: PPSpacing.s4),
+              Text('Small (W/M/6M/Y)',
+                  style: Theme.of(context).textTheme.labelSmall),
+              SizedBox(
+                width: 300,
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    int index = 0;
+                    return PPSegmentedControl(
+                      segments: const ['W', 'M', '6M', 'Y'],
+                      selectedIndex: index,
+                      onChanged: (i) => setState(() => index = i),
+                      small: true,
+                    );
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _NormalSegmentedDemo extends StatefulWidget {
-  const _NormalSegmentedDemo({required this.onChanged});
-  final ValueChanged<int> onChanged;
-
-  @override
-  State<_NormalSegmentedDemo> createState() => _NormalSegmentedDemoState();
-}
-
-class _NormalSegmentedDemoState extends State<_NormalSegmentedDemo> {
-  int _index = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return PPSegmentedControl(
-      segments: const ['Run', 'Ride', 'Gym'],
-      selectedIndex: _index,
-      onChanged: (i) {
-        setState(() => _index = i);
-        widget.onChanged(i);
-      },
-    );
-  }
-}
-
-class _SmallSegmentedDemo extends StatefulWidget {
-  const _SmallSegmentedDemo({required this.onChanged});
-  final ValueChanged<int> onChanged;
-
-  @override
-  State<_SmallSegmentedDemo> createState() => _SmallSegmentedDemoState();
-}
-
-class _SmallSegmentedDemoState extends State<_SmallSegmentedDemo> {
-  int _index = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return PPSegmentedControl(
-      segments: const ['W', 'M', '6M', 'Y'],
-      selectedIndex: _index,
-      onChanged: (i) {
-        setState(() => _index = i);
-        widget.onChanged(i);
-      },
-      small: true,
     );
   }
 }

@@ -83,11 +83,13 @@ void main() {
       ],
     )));
     await tester.pumpAndSettle();
-    final thumb = tester.widget<Container>(find.byKey(const Key('pp_segmented_thumb')));
-    expect(thumb.constraints!.maxHeight, greaterThanOrEqualTo(20));
+    final thumbSize =
+        tester.getSize(find.byKey(const Key('pp_segmented_thumb')));
+    expect(thumbSize.height, greaterThanOrEqualTo(20));
   });
 
-  testWidgets('small variant tap target inflated to 44px', (tester) async {
+  testWidgets('small variant layout height 44px, tap outside visual pill',
+      (tester) async {
     int? changed;
     await tester.pumpWidget(wrap(Column(
       mainAxisSize: MainAxisSize.min,
@@ -103,10 +105,12 @@ void main() {
         ),
       ],
     )));
-    // Tap at a position that would be outside the ~20px visual height
-    // but within the 44px inflated hit target (PPTapTarget clamps to center)
+    // Verify layout height is 44px (tap rule)
+    final controlSize = tester.getSize(find.byType(PPSegmentedControl));
+    expect(controlSize.height, 44);
+    // Tap at +18px offset from 'M' center (inside 44px box, outside 28px visual)
     final centerOfM = tester.getCenter(find.text('M'));
-    await tester.tapAt(centerOfM + const Offset(0, 10));
+    await tester.tapAt(centerOfM + const Offset(0, 18));
     expect(changed, 1); // M is at index 1
   });
 }
