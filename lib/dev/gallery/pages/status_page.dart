@@ -103,6 +103,18 @@ class StatusGalleryPage extends StatelessWidget {
           ]),
         ),
         GallerySection(
+          title: 'PPCountdownOverlay',
+          child: PPButton(
+            label: 'Show 3-2-1 countdown',
+            onPressed: () => PPCountdownOverlay.show(
+              context,
+              overline: 'Starting run',
+              caption: '5.00 km goal',
+              onFinished: () {},
+            ),
+          ),
+        ),
+        GallerySection(
           title: 'Empty / error states',
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             const Text('Empty State'),
