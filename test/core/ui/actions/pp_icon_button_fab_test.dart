@@ -48,6 +48,22 @@ void main() {
     expect(icon.color, ppDarkColorScheme.onPrimary);
   });
 
+  testWidgets('disabled filled PPIconButton dims colors (dark theme)',
+      (tester) async {
+    await tester.pumpWidget(wrap(const PPIconButton(
+        icon: PPIcons.plus,
+        style: PPIconButtonStyle.filled,
+        onPressed: null)));
+    final deco = tester
+        .widget<AnimatedContainer>(find.byKey(const Key('pp_icon_button_box')))
+        .decoration! as BoxDecoration;
+    expect(deco.color,
+        ppDarkColorScheme.primary.withValues(alpha: 0.30));
+    final icon = tester.widget<Icon>(find.byType(Icon));
+    expect(icon.color,
+        ppDarkColorScheme.onPrimary.withValues(alpha: 0.55));
+  });
+
   testWidgets('FAB circular is 64 with shadow in dark theme too',
       (tester) async {
     await tester.pumpWidget(wrap(PPStartFab(onPressed: () {})));

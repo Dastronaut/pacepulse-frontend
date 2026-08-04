@@ -52,8 +52,12 @@ class _PPIconButtonState extends State<PPIconButton> {
         fg = enabled ? scheme.onSurface : pp.onSurfaceDisabled;
         if (!dark) shadow = pp.shadow1;
       case PPIconButtonStyle.filled:
-        bg = scheme.primary;
-        fg = scheme.onPrimary;
+        bg = enabled
+            ? scheme.primary
+            : scheme.primary.withValues(alpha: dark ? 0.30 : 0.45);
+        fg = enabled
+            ? scheme.onPrimary
+            : scheme.onPrimary.withValues(alpha: dark ? 0.55 : 0.45);
     }
 
     return PPPressable(
