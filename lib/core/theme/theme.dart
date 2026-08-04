@@ -148,10 +148,12 @@ ThemeData _buildTheme(ColorScheme scheme, PPColors pp) {
     ),
 
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: scheme.surfaceContainerHighest,
+      backgroundColor:
+          isDark ? scheme.surfaceContainerHighest : PPPalette.slate,
       contentTextStyle: ppTextTheme.bodyMedium?.copyWith(
-        color: scheme.onSurface,
+        color: isDark ? scheme.onSurface : PPPalette.mist,
       ),
+      actionTextColor: isDark ? pp.accentText : PPPalette.ember,
       behavior: SnackBarBehavior.floating,
       shape: const RoundedRectangleBorder(borderRadius: PPRadius.tileRadius),
     ),

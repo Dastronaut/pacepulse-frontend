@@ -10,8 +10,8 @@ class StatusGalleryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
-        GallerySection(
+      children: [
+        const GallerySection(
           title: 'PPChip variants',
           child: Wrap(spacing: PPSpacing.s3, runSpacing: PPSpacing.s3,
               children: [
@@ -22,6 +22,30 @@ class StatusGalleryPage extends StatelessWidget {
                 PPChip(label: 'Ready', variant: PPChipVariant.success),
                 PPChip(label: 'Failed', variant: PPChipVariant.error),
                 PPChip(label: 'Ad', shape: PPChipShape.tag),
+              ]),
+        ),
+        GallerySection(
+          title: 'PPToast',
+          child: Wrap(spacing: PPSpacing.s3, runSpacing: PPSpacing.s3,
+              children: [
+                PPButton(
+                  label: 'Show success',
+                  onPressed: () => showPPToast(
+                    context,
+                    message: 'Workout saved',
+                    actionLabel: 'View',
+                    onAction: () {},
+                  ),
+                ),
+                PPButton(
+                  label: 'Show error',
+                  variant: PPButtonVariant.danger,
+                  onPressed: () => showPPToast(
+                    context,
+                    kind: PPToastKind.error,
+                    message: 'Sync failed — retry later',
+                  ),
+                ),
               ]),
         ),
       ],
