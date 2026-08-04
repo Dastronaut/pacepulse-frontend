@@ -9,7 +9,10 @@ enum PPChipVariant { live, pr, streak, premium, success, error }
 
 enum PPChipShape { pill, tag }
 
-/// Status pill (D1-E1). Overline type tracked +0.14em, pad 5/12.
+/// Status pill (D1-E1): overline type tracked +0.14em, pad 5/12, 14px
+/// leading icon slot, streak label mono 12 w700 — all design-specified
+/// geometry from the D1 sheet with no CSS custom property (human ruling
+/// 2026-08-03: spec literals with documented provenance).
 class PPChip extends StatelessWidget {
   const PPChip({
     super.key,
