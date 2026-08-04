@@ -17,6 +17,7 @@ class PPPressable extends StatefulWidget {
     this.onLongPress,
     this.enabled = true,
     this.semanticLabel,
+    this.onHighlightChanged,
   });
 
   final Widget child;
@@ -24,6 +25,11 @@ class PPPressable extends StatefulWidget {
   final VoidCallback? onLongPress;
   final bool enabled;
   final String? semanticLabel;
+
+  /// Fires true on tap-down, false on up/cancel — lets composites (workout
+  /// card, chips) swap fills while pressed without owning gesture state
+  /// themselves.
+  final ValueChanged<bool>? onHighlightChanged;
 
   @override
   State<PPPressable> createState() => _PPPressableState();
@@ -35,6 +41,12 @@ class _PPPressableState extends State<PPPressable> {
   bool get _interactive =>
       widget.enabled && (widget.onPressed != null || widget.onLongPress != null);
 
+  void _setDown(bool v) {
+    if (_down == v) return;
+    setState(() => _down = v);
+    widget.onHighlightChanged?.call(v);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PPTapTarget(
@@ -44,10 +56,9 @@ class _PPPressableState extends State<PPPressable> {
         label: widget.semanticLabel,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTapDown: _interactive ? (_) => setState(() => _down = true) : null,
-          onTapCancel:
-              _interactive ? () => setState(() => _down = false) : null,
-          onTapUp: _interactive ? (_) => setState(() => _down = false) : null,
+          onTapDown: _interactive ? (_) => _setDown(true) : null,
+          onTapCancel: _interactive ? () => _setDown(false) : null,
+          onTapUp: _interactive ? (_) => _setDown(false) : null,
           onTap: widget.enabled ? widget.onPressed : null,
           onLongPress: widget.enabled ? widget.onLongPress : null,
           child: AnimatedScale(

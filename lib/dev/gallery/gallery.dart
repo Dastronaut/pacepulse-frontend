@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/theme.dart';
+import 'pages/actions_page.dart';
 import 'pages/foundations_page.dart';
 
 export 'pages/foundations_page.dart';
@@ -9,6 +10,7 @@ export 'pages/foundations_page.dart';
 /// kit grows; ordering mirrors the D1 sheet.
 final Map<String, WidgetBuilder> galleryPages = {
   'Foundations': (_) => const FoundationsGalleryPage(),
+  'Actions': (_) => const ActionsGalleryPage(),
 };
 
 class GalleryScreen extends StatefulWidget {
