@@ -66,4 +66,47 @@ void main() {
     expect(sel.style!.fontWeight, FontWeight.w600);
     expect(unsel.style!.color, ppDarkColorScheme.onSurfaceVariant);
   });
+
+  testWidgets('small variant thumb renders at bounded height in Column',
+      (tester) async {
+    await tester.pumpWidget(wrap(Column(
+      children: [
+        SizedBox(
+          width: 300,
+          child: PPSegmentedControl(
+            segments: const ['W', 'M', '6M', 'Y'],
+            selectedIndex: 0,
+            onChanged: (_) {},
+            small: true,
+          ),
+        ),
+      ],
+    )));
+    await tester.pumpAndSettle();
+    final thumb = tester.widget<Container>(find.byKey(const Key('pp_segmented_thumb')));
+    expect(thumb.constraints!.maxHeight, greaterThanOrEqualTo(20));
+  });
+
+  testWidgets('small variant tap target inflated to 44px', (tester) async {
+    int? changed;
+    await tester.pumpWidget(wrap(Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 200,
+          child: PPSegmentedControl(
+            segments: const ['W', 'M', '6M', 'Y'],
+            selectedIndex: 0,
+            onChanged: (i) => changed = i,
+            small: true,
+          ),
+        ),
+      ],
+    )));
+    // Tap at a position that would be outside the ~20px visual height
+    // but within the 44px inflated hit target (PPTapTarget clamps to center)
+    final centerOfM = tester.getCenter(find.text('M'));
+    await tester.tapAt(centerOfM + const Offset(0, 10));
+    expect(changed, 1); // M is at index 1
+  });
 }

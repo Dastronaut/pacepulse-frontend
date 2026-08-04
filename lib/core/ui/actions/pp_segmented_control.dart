@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
+import '../foundations/pp_pressable.dart';
 
 /// Pill segmented control (D1-A6). Max 4 equal-width segments; the
 /// selected thumb slides at [PPMotion.base]/[PPMotion.standard]. Dark
@@ -8,7 +9,9 @@ import '../../theme/theme.dart';
 /// the container gains a hairline.
 ///
 /// Geometry literals per D1 (2026-08-03): container pad 4 (normal) / 3 (small),
-/// small item pad 3 vert / 10 horiz — D1 sheet + human ruling.
+/// small item pad 3 vert / 10 horiz, small control height 28 (caption + pads,
+/// per ChartCard spec) — D1 sheet + human ruling. Hit targets inflated to >=44px
+/// via [PPTapTarget] on each segment.
 class PPSegmentedControl extends StatelessWidget {
   const PPSegmentedControl({
     super.key,
@@ -39,7 +42,7 @@ class PPSegmentedControl extends StatelessWidget {
         : theme.textTheme.bodySmall!;
 
     return Container(
-      height: small ? null : PPSpacing.tapMin,
+      height: small ? 28 : PPSpacing.tapMin,
       padding: EdgeInsets.all(pad),
       decoration: BoxDecoration(
         color: scheme.surfaceContainer,
@@ -58,6 +61,7 @@ class PPSegmentedControl extends StatelessWidget {
               duration: PPMotion.base,
               curve: PPMotion.standard,
               child: Container(
+                key: const Key('pp_segmented_thumb'),
                 width: w,
                 decoration: BoxDecoration(
                   color: dark ? scheme.surfaceContainerHighest : scheme.surface,
@@ -70,23 +74,25 @@ class PPSegmentedControl extends StatelessWidget {
               children: [
                 for (var i = 0; i < n; i++)
                   Expanded(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onChanged(i),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: small ? 3 : 0,
-                              horizontal: small ? 10 : 0),
-                          child: Text(
-                            segments[i],
-                            style: labelStyle.copyWith(
-                              color: i == selectedIndex
-                                  ? scheme.onSurface
-                                  : scheme.onSurfaceVariant,
-                              fontWeight: i == selectedIndex
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
+                    child: PPTapTarget(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => onChanged(i),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: small ? 3 : 0,
+                                horizontal: small ? 10 : 0),
+                            child: Text(
+                              segments[i],
+                              style: labelStyle.copyWith(
+                                color: i == selectedIndex
+                                    ? scheme.onSurface
+                                    : scheme.onSurfaceVariant,
+                                fontWeight: i == selectedIndex
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                              ),
                             ),
                           ),
                         ),
