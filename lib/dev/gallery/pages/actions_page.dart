@@ -42,6 +42,32 @@ class ActionsGalleryPage extends StatelessWidget {
                 PPButton(label: 'Saving', loading: true, onPressed: () {}),
               ]),
         ),
+        GallerySection(
+          title: 'PPIconButton',
+          child: Wrap(spacing: PPSpacing.s3, runSpacing: PPSpacing.s3,
+              children: [
+                PPIconButton(
+                    icon: PPIcons.share2,
+                    style: PPIconButtonStyle.quiet,
+                    onPressed: () {}),
+                PPIconButton(
+                    icon: PPIcons.plus,
+                    style: PPIconButtonStyle.tonal,
+                    onPressed: () {}),
+                PPIconButton(
+                    icon: PPIcons.play,
+                    style: PPIconButtonStyle.filled,
+                    onPressed: () {}),
+              ]),
+        ),
+        GallerySection(
+          title: 'PPStartFab',
+          child: Wrap(spacing: PPSpacing.s3, runSpacing: PPSpacing.s3,
+              children: [
+                PPStartFab(onPressed: () {}),
+                PPStartFab(onPressed: () {}, extendedLabel: 'Start workout'),
+              ]),
+        ),
       ],
     );
   }

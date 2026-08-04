@@ -10,3 +10,5 @@ export 'foundations/pp_live_dot.dart';
 export 'foundations/pp_live_pulse.dart';
 export 'foundations/pp_spinner.dart';
 export 'actions/pp_button.dart';
+export 'actions/pp_icon_button.dart';
+export 'actions/pp_fab.dart';
