@@ -9,6 +9,9 @@ class ActionsGalleryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int normalIndex = 0;
+    int smallIndex = 0;
+
     return ListView(
       children: [
         GallerySection(
@@ -79,14 +82,11 @@ class ActionsGalleryPage extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: StatefulBuilder(
-                  builder: (context, setState) {
-                    int index = 0;
-                    return PPSegmentedControl(
-                      segments: const ['Run', 'Ride', 'Gym'],
-                      selectedIndex: index,
-                      onChanged: (i) => setState(() => index = i),
-                    );
-                  },
+                  builder: (context, setState) => PPSegmentedControl(
+                    segments: const ['Run', 'Ride', 'Gym'],
+                    selectedIndex: normalIndex,
+                    onChanged: (i) => setState(() => normalIndex = i),
+                  ),
                 ),
               ),
               SizedBox(height: PPSpacing.s4),
@@ -95,15 +95,12 @@ class ActionsGalleryPage extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: StatefulBuilder(
-                  builder: (context, setState) {
-                    int index = 0;
-                    return PPSegmentedControl(
-                      segments: const ['W', 'M', '6M', 'Y'],
-                      selectedIndex: index,
-                      onChanged: (i) => setState(() => index = i),
-                      small: true,
-                    );
-                  },
+                  builder: (context, setState) => PPSegmentedControl(
+                    segments: const ['W', 'M', '6M', 'Y'],
+                    selectedIndex: smallIndex,
+                    onChanged: (i) => setState(() => smallIndex = i),
+                    small: true,
+                  ),
                 ),
               ),
             ],
