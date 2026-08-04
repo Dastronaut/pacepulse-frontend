@@ -76,8 +76,8 @@ class _RingMotifPainter extends CustomPainter {
       ..color = line;
     canvas.drawArc(Rect.fromCircle(center: center, radius: r),
         -math.pi / 2 + gap / 2, 2 * math.pi - gap, false, paint);
-    // Accent dot at the start gate.
-    final dotAngle = -math.pi / 2 + gap / 2;
+    // Accent dot centered in the gate at 12 o'clock.
+    final dotAngle = -math.pi / 2;
     canvas.drawCircle(
       center + Offset(r * math.cos(dotAngle), r * math.sin(dotAngle)),
       4,

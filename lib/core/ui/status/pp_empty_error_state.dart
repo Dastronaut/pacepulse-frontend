@@ -86,6 +86,7 @@ class _StateScaffold extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         key: const Key('pp_state_constraint'),
+        // max-w 280: D1-E5 empty/error column width (human ruling 2026-08-03)
         constraints: const BoxConstraints(maxWidth: 280),
         child: Column(
           mainAxisSize: MainAxisSize.min,
