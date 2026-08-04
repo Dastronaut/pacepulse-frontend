@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/theme.dart';
 import 'pages/actions_page.dart';
+import 'pages/data_page.dart';
 import 'pages/foundations_page.dart';
 import 'pages/status_page.dart';
 
@@ -13,6 +14,7 @@ final Map<String, WidgetBuilder> galleryPages = {
   'Foundations': (_) => const FoundationsGalleryPage(),
   'Actions': (_) => const ActionsGalleryPage(),
   'Status': (_) => const StatusGalleryPage(),
+  'Data': (_) => const DataGalleryPage(),
 };
 
 class GalleryScreen extends StatefulWidget {
