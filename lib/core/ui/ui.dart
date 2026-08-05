@@ -25,3 +25,5 @@ export 'data/pp_metric_display.dart';
 export 'data/pp_stat_tile.dart';
 export 'data/pp_workout_card.dart';
 export 'data/pp_progress_bar.dart';
+export 'data/pp_chart_card.dart';
+export 'data/pp_elevation_profile.dart';

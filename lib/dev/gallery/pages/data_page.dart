@@ -127,6 +127,35 @@ class DataGalleryPage extends StatelessWidget {
             ),
           ),
         ),
+        const GallerySection(
+          title: 'PPChartCard',
+          child: PPChartCard(
+            title: 'Distance',
+            series: [
+              [4.1, 5.3, 4.8, 6.2, 5.9, 7.0, 6.4],
+              [3.0, 3.4, 3.9, 3.6, 4.2, 4.0, 4.6],
+            ],
+            periods: ['W', 'M', '6M', 'Y'],
+          ),
+        ),
+        const GallerySection(
+          title: 'PPElevationProfile',
+          child: PPElevationProfile(
+            elevations: [
+              120,
+              135,
+              128,
+              150,
+              170,
+              165,
+              190,
+              210,
+              195,
+              180,
+              160,
+            ],
+          ),
+        ),
       ],
     );
   }
