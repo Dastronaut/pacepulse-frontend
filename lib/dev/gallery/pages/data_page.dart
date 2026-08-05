@@ -30,6 +30,60 @@ class DataGalleryPage extends StatelessWidget {
             child: const Text('2nd'),
           ),
         ),
+        const GallerySection(
+          title: 'PPMetricDisplay (display)',
+          child: PPMetricDisplay(
+            label: 'Distance',
+            value: '4.62',
+            unit: 'km',
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (mono)',
+          child: PPMetricDisplay(
+            label: 'Time',
+            value: '28:41',
+            face: PPMetricFace.mono,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (live)',
+          child: PPMetricDisplay(
+            label: 'Heart rate',
+            value: '152',
+            unit: 'bpm',
+            live: true,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (accent)',
+          child: PPMetricDisplay(
+            label: 'Elevation',
+            value: '1256',
+            unit: 'm',
+            accent: true,
+          ),
+        ),
+        GallerySection(
+          title: 'PPStatTile',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const PPStatTile(
+                icon: PPIcons.flame,
+                label: 'Calories',
+                value: '486',
+              ),
+              const SizedBox(width: 16),
+              const PPStatTile(
+                icon: PPIcons.route,
+                label: 'Distance',
+                value: '5.2',
+                unit: 'km',
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

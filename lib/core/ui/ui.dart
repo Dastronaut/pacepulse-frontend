@@ -21,3 +21,5 @@ export 'assets/pp_illustration.dart';
 export 'status/pp_empty_error_state.dart';
 export 'status/pp_countdown_overlay.dart';
 export 'data/pp_activity_ring.dart';
+export 'data/pp_metric_display.dart';
+export 'data/pp_stat_tile.dart';
