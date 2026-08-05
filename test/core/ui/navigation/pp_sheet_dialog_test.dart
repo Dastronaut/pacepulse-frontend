@@ -38,6 +38,54 @@ void main() {
     expect(find.text('Filters'), findsNothing);
   });
 
+  testWidgets(
+      'sheet: builder content has a Material ancestor (PPTextField works)',
+      (tester) async {
+    await tester.pumpWidget(host((c) => showPPSheet<void>(c,
+        title: 'Search',
+        builder: (_) => const PPTextField(label: 'Search'))));
+    await tester.tap(find.text('go'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 360));
+    expect(tester.takeException(), isNull);
+    expect(find.byType(PPTextField), findsOneWidget);
+  });
+
+  testWidgets('sheet: fling down on the grabber dismisses', (tester) async {
+    await tester.pumpWidget(host((c) => showPPSheet<void>(c,
+        title: 'Filters',
+        builder: (_) => const SizedBox(height: 120))));
+    await tester.tap(find.text('go'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 360));
+    expect(find.text('Filters'), findsOneWidget);
+    await tester.fling(find.byKey(const Key('pp_sheet_grabber')),
+        const Offset(0, 200), 500,
+        warnIfMissed: false);
+    await tester.pumpAndSettle();
+    expect(find.text('Filters'), findsNothing);
+  });
+
+  testWidgets('sheet: drag on scrollable builder content does not dismiss',
+      (tester) async {
+    await tester.pumpWidget(host((c) => showPPSheet<void>(c,
+        title: 'Items',
+        builder: (_) => SizedBox(
+              height: 100,
+              child: ListView(
+                children: List.generate(
+                    10, (i) => ListTile(title: Text('Item $i'))),
+              ),
+            ))));
+    await tester.tap(find.text('go'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 360));
+    expect(find.text('Items'), findsOneWidget);
+    await tester.drag(find.text('Item 0'), const Offset(0, 200));
+    await tester.pump();
+    expect(find.text('Items'), findsOneWidget);
+  });
+
   testWidgets('dialog: 300 wide, destructive confirm resolves true',
       (tester) async {
     bool? result;

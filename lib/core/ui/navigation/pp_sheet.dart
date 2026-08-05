@@ -58,45 +58,67 @@ class _PPSheetRoute<T> extends PopupRoute<T> {
 
     return Align(
       alignment: Alignment.bottomCenter,
-      child: GestureDetector(
-        onVerticalDragEnd: (details) {
-          if ((details.primaryVelocity ?? 0) > 300) {
-            Navigator.of(context).pop();
-          }
-        },
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: dark ? scheme.surfaceContainerHigh : scheme.surface,
-            borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(PPRadius.xl)),
-            boxShadow: dark ? null : pp.shadow3,
-          ),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: dark ? scheme.surfaceContainerHigh : scheme.surface,
+          borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(PPRadius.xl)),
+          boxShadow: dark ? null : pp.shadow3,
+        ),
+        // A PopupRoute's overlay entry sits outside the page Scaffold's
+        // Material ancestor, so Material-dependent builder content
+        // (PPTextField, Switch, ...) would assert debugCheckHasMaterial
+        // without this. Decoration stays on the Container above.
+        child: Material(
+          color: Colors.transparent,
           child: SafeArea(
             top: false,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Center(
-                  child: Container(
-                    key: const Key('pp_sheet_grabber'),
-                    margin: const EdgeInsets.only(top: PPSpacing.s3),
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: scheme.outline,
-                      borderRadius: BorderRadius.circular(PPRadius.pill),
-                    ),
+                // Drag-to-dismiss is scoped to the grabber/title zone
+                // only. Wrapping the whole sheet (as the brief's Step-3
+                // draft did) would put the gesture in the same arena as
+                // any scrollable builder content — misdismiss or dead
+                // scroll.
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onVerticalDragEnd: (details) {
+                    if ((details.primaryVelocity ?? 0) > 300) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Container(
+                          key: const Key('pp_sheet_grabber'),
+                          margin: const EdgeInsets.only(top: PPSpacing.s3),
+                          width: 36,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: scheme.outline,
+                            borderRadius:
+                                BorderRadius.circular(PPRadius.pill),
+                          ),
+                        ),
+                      ),
+                      if (title != null)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              PPSpacing.padCard,
+                              PPSpacing.s3,
+                              PPSpacing.padCard,
+                              0),
+                          child: Text(title!,
+                              style: theme.textTheme.headlineSmall),
+                        ),
+                    ],
                   ),
                 ),
-                if (title != null)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(PPSpacing.padCard,
-                        PPSpacing.s3, PPSpacing.padCard, 0),
-                    child: Text(title!,
-                        style: theme.textTheme.headlineSmall),
-                  ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(PPSpacing.padCard,
                       PPSpacing.s3, PPSpacing.padCard, PPSpacing.s6),
