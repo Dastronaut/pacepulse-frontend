@@ -7,6 +7,7 @@ import '../foundations/pp_pressable.dart';
 enum _RowKind { toggle, value, plain }
 
 /// Settings list card (D1-C2): clipped lg card with inset hairlines.
+/// D1-C2: divider inset 54 = icon 24 + gap 14 + pad 16 (human ruling 2026-08-03: spec literals with documented provenance).
 class PPSettingsGroup extends StatelessWidget {
   const PPSettingsGroup({super.key, required this.children});
 
@@ -17,30 +18,34 @@ class PPSettingsGroup extends StatelessWidget {
     final theme = Theme.of(context);
     final pp = theme.extension<PPColors>()!;
     final dark = theme.brightness == Brightness.dark;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(PPRadius.lg),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(PPRadius.lg),
-          boxShadow: dark ? null : pp.shadow1,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (var i = 0; i < children.length; i++) ...[
-              if (i > 0)
-                Padding(
-                  key: const Key('pp_settings_divider'),
-                  padding: const EdgeInsets.only(left: 54),
-                  child: Divider(
-                      height: PPBorders.hairline,
-                      thickness: PPBorders.hairline,
-                      color: theme.colorScheme.outlineVariant),
-                ),
-              children[i],
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(PPRadius.lg),
+        boxShadow: dark ? null : pp.shadow1,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(PPRadius.lg),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerLow,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < children.length; i++) ...[
+                if (i > 0)
+                  Padding(
+                    key: const Key('pp_settings_divider'),
+                    padding: const EdgeInsets.only(left: 54),
+                    child: Divider(
+                        height: PPBorders.hairline,
+                        thickness: PPBorders.hairline,
+                        color: theme.colorScheme.outlineVariant),
+                  ),
+                children[i],
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -48,6 +53,7 @@ class PPSettingsGroup extends StatelessWidget {
 }
 
 /// One settings row: toggle / value+chevron / plain. Height 56.
+/// D1-C2: row 56, toggle 52×32 knob 24 inset 4 (human ruling 2026-08-03: spec literals with documented provenance).
 class PPSettingsRow extends StatelessWidget {
   const PPSettingsRow.toggle({
     super.key,
@@ -131,11 +137,22 @@ class PPSettingsRow extends StatelessWidget {
         ? () => _onChanged!(!_value)
         : onTap;
     if (action == null) return row;
-    return PPPressable(
+
+    final pressable = PPPressable(
         onPressed: action, semanticLabel: title, child: row);
+
+    // Wrap toggle with Semantics to announce switch state to screen readers
+    if (_kind == _RowKind.toggle) {
+      return Semantics(
+        toggled: _value,
+        child: pressable,
+      );
+    }
+    return pressable;
   }
 }
 
+/// D1-C2: 52×32 pill, 24px knob inset 4 (human ruling 2026-08-03: spec literals with documented provenance).
 class _PPToggle extends StatelessWidget {
   const _PPToggle({required this.value});
 

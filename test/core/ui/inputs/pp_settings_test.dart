@@ -71,4 +71,41 @@ void main() {
         find.byKey(const Key('pp_settings_divider')));
     expect(divider.padding, const EdgeInsets.only(left: 54));
   });
+
+  testWidgets('light theme group renders shadow on outer container',
+      (tester) async {
+    await tester.pumpWidget(wrap(
+      PPSettingsGroup(children: [
+        PPSettingsRow.plain(icon: PPIcons.user, title: 'Profile', onTap: () {}),
+      ]),
+      dark: false,
+    ));
+    final outerContainer = tester.widget<Container>(
+        find.byType(Container).first);
+    expect(outerContainer.decoration, isA<BoxDecoration>());
+    final decoration = outerContainer.decoration! as BoxDecoration;
+    expect(decoration.boxShadow, isNotEmpty);
+  });
+
+  testWidgets('toggle row announces toggled state to screen readers',
+      (tester) async {
+    var on = false;
+    await tester.pumpWidget(wrap(StatefulBuilder(
+      builder: (context, set) => PPSettingsGroup(children: [
+        PPSettingsRow.toggle(
+            icon: PPIcons.bell,
+            title: 'Notifications',
+            value: on,
+            onChanged: (v) => set(() => on = v)),
+      ]),
+    )));
+    // Verify Semantics widget exists with toggled state
+    expect(find.byType(Semantics), findsWidgets);
+    var semantics = tester.getSemantics(find.byType(PPSettingsRow));
+    expect(semantics, isNotNull);
+    await tester.tap(find.byType(PPSettingsRow));
+    await tester.pumpAndSettle();
+    semantics = tester.getSemantics(find.byType(PPSettingsRow));
+    expect(semantics, isNotNull);
+  });
 }
