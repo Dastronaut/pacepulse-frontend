@@ -78,6 +78,54 @@ class NavigationGalleryPage extends StatelessWidget {
             ),
           ),
         ),
+        GallerySection(
+          title: 'showPPSheet',
+          child: Builder(
+            builder: (context) => PPButton(
+              label: 'Open sheet',
+              onPressed: () => showPPSheet<void>(
+                context,
+                title: 'Filters',
+                builder: (_) => const SizedBox(
+                  height: 120,
+                  child: Center(child: Text('Sheet content')),
+                ),
+              ),
+            ),
+          ),
+        ),
+        GallerySection(
+          title: 'showPPDialog',
+          child: Builder(
+            builder: (context) => Wrap(
+              spacing: PPSpacing.s3,
+              runSpacing: PPSpacing.s3,
+              children: [
+                PPButton(
+                  label: 'Sign out',
+                  onPressed: () => showPPDialog<bool>(
+                    context,
+                    title: 'Sign out?',
+                    body: 'You can sign back in anytime.',
+                    confirmLabel: 'Sign out',
+                  ),
+                ),
+                PPButton(
+                  label: 'Discard run (destructive)',
+                  variant: PPButtonVariant.danger,
+                  onPressed: () => showPPDialog<bool>(
+                    context,
+                    title: 'Discard run?',
+                    body: 'This deletes the recording — it cannot be '
+                        'undone.',
+                    confirmLabel: 'Discard',
+                    destructive: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
