@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 import '../foundations/pp_pressable.dart';
 
-/// Route preview card (D1-F1). The map area is the mockups' hatch
-/// placeholder until the styled Google Maps basemaps land (D3) — the
-/// polyline/dot treatment is final.
+/// Route preview card (D1-F1: map area 140, polyline 4px, endpoint dots r4 —
+/// human ruling 2026-08-03: spec literals with documented provenance).
+/// The map area is the mockups' hatch placeholder until the styled Google Maps
+/// basemaps land (D3) — the polyline/dot treatment is final.
 class PPMapPreviewCard extends StatelessWidget {
   const PPMapPreviewCard({
     super.key,

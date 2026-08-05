@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 import '../foundations/pp_pressable.dart';
 
-/// Paywall plan selector (D1-F3). Selection grows the border 1 -> 2px;
-/// the padding shrinks 16 -> 15 so content never jumps.
+/// Paywall plan selector (D1-F3: radio 22/dot 8, badge top −10 right 12,
+/// badge 10px/+0.6 tracking, pad 16↔15 compensation — human ruling 2026-08-03:
+/// spec literals with documented provenance).
 class PPPaywallPlanCard extends StatelessWidget {
   const PPPaywallPlanCard({
     super.key,

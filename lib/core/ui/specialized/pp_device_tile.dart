@@ -8,7 +8,8 @@ import '../foundations/pp_spinner.dart';
 
 enum PPDeviceState { connect, connecting, connected }
 
-/// BLE device row (D1-F2). Weak signal < -80 dBm warns.
+/// BLE device row (D1-F2: weak-signal threshold −80 dBm — human ruling
+/// 2026-08-03: spec literals with documented provenance).
 class PPDeviceTile extends StatelessWidget {
   const PPDeviceTile({
     super.key,
