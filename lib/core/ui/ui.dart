@@ -27,3 +27,5 @@ export 'data/pp_workout_card.dart';
 export 'data/pp_progress_bar.dart';
 export 'data/pp_chart_card.dart';
 export 'data/pp_elevation_profile.dart';
+export 'data/pp_hr_zone_bar.dart';
+export 'data/pp_splits.dart';

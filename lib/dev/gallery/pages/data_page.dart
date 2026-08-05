@@ -156,6 +156,38 @@ class DataGalleryPage extends StatelessWidget {
             ],
           ),
         ),
+        GallerySection(
+          title: 'PPHRZoneBar',
+          child: SizedBox(
+            width: 200,
+            child: PPHRZoneBar(
+              fractions: [0.15, 0.20, 0.35, 0.25, 0.05],
+            ),
+          ),
+        ),
+        GallerySection(
+          title: 'PPHRZoneBar (active zone 4 with legend)',
+          child: SizedBox(
+            width: 200,
+            child: PPHRZoneBar(
+              fractions: [0.1, 0.2, 0.3, 0.3, 0.1],
+              activeZone: 4,
+              legendTimes: ['0:45', '2:15', '5:30', '8:00', '2:30'],
+            ),
+          ),
+        ),
+        const GallerySection(
+          title: 'Splits',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              PPSplitsHeader(),
+              PPSplitsRow(km: '1', pace: '5:42'),
+              PPSplitsRow(km: '2', pace: '5:31', deltaSeconds: -11, fastest: true),
+              PPSplitsRow(km: '3', pace: '5:50', deltaSeconds: 19),
+            ],
+          ),
+        ),
       ],
     );
   }
