@@ -30,29 +30,46 @@ void main() {
         .pumpWidget(wrap(const PPTextField(label: 'Email')));
     expect(tester.getSize(find.byKey(const Key('pp_field_box'))).height, 52);
     var deco = _box(tester).decoration! as BoxDecoration;
-    expect((deco.border! as Border).top.width, PPBorders.hairline);
-    expect(_box(tester).padding,
-        const EdgeInsets.symmetric(horizontal: 16));
+    expect(deco.border, isNull); // dark rest = borderless
+
+    // Record TextField horizontal position at rest (dark theme, no border)
+    final restX = tester.getTopLeft(find.byType(TextField)).dx;
 
     await tester.tap(find.byType(TextField));
     await tester.pumpAndSettle();
     deco = _box(tester).decoration! as BoxDecoration;
     expect((deco.border! as Border).top.width, PPBorders.strong);
     expect((deco.border! as Border).top.color, PPColors.dark.accentText);
-    expect(_box(tester).padding,
-        const EdgeInsets.symmetric(horizontal: 14));
+
+    // Verify TextField position unchanged (constant 16 inset: 16 + 0 = 14 + 2)
+    final focusX = tester.getTopLeft(find.byType(TextField)).dx;
+    expect(focusX, restX);
   });
 
-  testWidgets('error: 2px error border + helper text', (tester) async {
-    await tester.pumpWidget(wrap(const PPTextField(
-        label: 'Password',
-        errorText: 'At least 8 characters — add a few more.')));
-    final deco = _box(tester).decoration! as BoxDecoration;
-    expect((deco.border! as Border).top.color, ppDarkColorScheme.error);
+  testWidgets('error: 2px error border + helper text + zero shift',
+      (tester) async {
+    // Light theme at rest has hairline (1px) with hPad=15, inset=16
+    await tester.pumpWidget(
+        wrap(const PPTextField(label: 'Username'), dark: false));
+    var deco = _box(tester).decoration! as BoxDecoration;
+    expect((deco.border! as Border).top.width, PPBorders.hairline);
+    final restX = tester.getTopLeft(find.byType(TextField)).dx;
+
+    // Trigger error (2px with hPad=14, inset=16)
+    await tester.pumpWidget(wrap(
+        const PPTextField(
+            label: 'Username',
+            errorText: 'At least 8 characters — add a few more.'),
+        dark: false));
+    deco = _box(tester).decoration! as BoxDecoration;
     expect((deco.border! as Border).top.width, PPBorders.strong);
+    expect((deco.border! as Border).top.color, ppLightColorScheme.error);
+    final errorX = tester.getTopLeft(find.byType(TextField)).dx;
+    expect(errorX, restX); // zero shift
+
     final helper = tester.widget<Text>(
         find.text('At least 8 characters — add a few more.'));
-    expect(helper.style!.color, ppDarkColorScheme.error);
+    expect(helper.style!.color, ppLightColorScheme.error);
   });
 
   testWidgets('disabled: outlineVariant fill, disabled text color',

@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 
 /// Text input (D1-C1). Focus and selection borders grow 1px -> 2px; the
-/// horizontal content padding shrinks 16 -> 14 in compensation so the
-/// text never shifts.
+/// horizontal content padding shrinks to maintain constant 16 effective inset
+/// (padding = 16 − border width; Container merges border dimensions into padding).
+/// Dark theme fields at rest are borderless (D1-C1 spec); light theme fields
+/// keep hairline outline. Effective horizontal inset is constant 16 across all
+/// states — zero content shift on focus/error.
+/// (h 52, constant 16 inset; human ruling 2026-08-03: spec literals with documented provenance)
 class PPTextField extends StatefulWidget {
   const PPTextField({
     super.key,
@@ -60,9 +64,17 @@ class _PPTextFieldState extends State<PPTextField> {
         : focused
             ? pp.accentText
             : scheme.outline;
-    final borderWidth =
-        (hasError || focused) ? PPBorders.strong : PPBorders.hairline;
-    final hPad = (hasError || focused) ? 14.0 : 16.0;
+    final double borderWidth = !widget.enabled
+        ? 0
+        : (hasError || focused)
+            ? PPBorders.strong // 2
+            : dark
+                ? 0 // D1-C1: dark rest = filled, no border
+                : PPBorders.hairline; // 1 (light rest keeps hairline outline)
+    final border = borderWidth == 0
+        ? null
+        : Border.all(color: borderColor, width: borderWidth);
+    final hPad = 16.0 - borderWidth; // effective inset always 16 — zero shift
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,9 +101,7 @@ class _PPTextFieldState extends State<PPTextField> {
                     ? scheme.surfaceContainer
                     : scheme.surface,
             borderRadius: BorderRadius.circular(PPRadius.sm),
-            border: widget.enabled
-                ? Border.all(color: borderColor, width: borderWidth)
-                : null,
+            border: border,
           ),
           child: Center(
             child: TextField(
