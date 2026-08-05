@@ -35,6 +35,55 @@ void main() {
     expect(w.reduce((a, b) => a + b), closeTo(100, 0.01));
   });
 
+  test('bandWidths: degenerate narrow width (floors cannot fit)', () {
+    final w = PPHRZoneBar.bandWidths(
+        fractions: [0.34, 0.165, 0.165, 0.165, 0.165], totalWidth: 20);
+    // usable = 20 - 4*2 = 12; 5 floors * 4 = 20 > usable → equal split 12/5 = 2.4
+    expect(w.length, 5);
+    expect(w.every((x) => x >= 0), true); // no negative values
+    expect(w.reduce((a, b) => a + b), closeTo(12, 0.01));
+  });
+
+  test('bandWidths: sum of fractions > 1 (scaled to unit weights)', () {
+    final w = PPHRZoneBar.bandWidths(
+        fractions: [1, 1, 1, 1, 1], totalWidth: 108);
+    // usable = 100; weights = [0.2, 0.2, 0.2, 0.2, 0.2]; each gets 20
+    expect(w.length, 5);
+    expect(w[0], closeTo(20, 0.01));
+    expect(w[1], closeTo(20, 0.01));
+    expect(w[2], closeTo(20, 0.01));
+    expect(w[3], closeTo(20, 0.01));
+    expect(w[4], closeTo(20, 0.01));
+    expect(w.reduce((a, b) => a + b), closeTo(100, 0.01));
+  });
+
+  test('bandWidths: all fractions zero (equal split, full-width bar)', () {
+    final w = PPHRZoneBar.bandWidths(
+        fractions: [0, 0, 0, 0, 0], totalWidth: 108);
+    // usable = 100; all zero → equal weights → each 20
+    expect(w.length, 5);
+    expect(w[0], closeTo(20, 0.01));
+    expect(w[1], closeTo(20, 0.01));
+    expect(w[2], closeTo(20, 0.01));
+    expect(w[3], closeTo(20, 0.01));
+    expect(w[4], closeTo(20, 0.01));
+    expect(w.reduce((a, b) => a + b), closeTo(100, 0.01));
+  });
+
+  testWidgets('bandWidths: widget render with extreme weights (no exception)',
+      (tester) async {
+    await tester.pumpWidget(wrap(SizedBox(
+        width: 200,
+        child: PPHRZoneBar(
+            fractions: const [0.03, 0.01, 0.01, 0.01, 0.01]))));
+    // Should render without exception; widths computed correctly.
+    final bands =
+        tester.widgetList<Container>(find.byKey(const Key('pp_zone_band')));
+    expect(bands.length, 5);
+    // All widths should be positive and non-zero.
+    expect(bands.every((b) => b.constraints!.maxWidth > 0), true);
+  });
+
   testWidgets('active zone is taller and full-opacity, others dimmed',
       (tester) async {
     await tester.pumpWidget(wrap(SizedBox(

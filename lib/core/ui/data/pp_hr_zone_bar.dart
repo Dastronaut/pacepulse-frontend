@@ -8,6 +8,9 @@ import '../../theme/theme.dart';
 ///
 /// Geometry specs: min band 4px, gap 2px (D1-B6), heights 12→16 when active (D1-B6),
 /// legend text 11px (D1-B6); human ruling 2026-08-03 confirms these are final.
+///
+/// bandWidths: fractions are normalized as weights (bar always fills width, no shrinkage);
+/// floors (minBand) guaranteed whenever they physically fit; equal-split fallback otherwise.
 class PPHRZoneBar extends StatelessWidget {
   const PPHRZoneBar({
     super.key,
@@ -28,28 +31,49 @@ class PPHRZoneBar extends StatelessWidget {
     double minBand = 4,
     double gap = 2,
   }) {
-    final usable = totalWidth - gap * (fractions.length - 1);
-    final raw = [for (final f in fractions) usable * f];
-    // Clamp small bands up to minBand, take the excess from the rest.
-    final clamped = List<double>.from(raw);
-    var deficit = 0.0;
-    var flexible = 0.0;
-    for (var i = 0; i < clamped.length; i++) {
-      if (clamped[i] < minBand) {
-        deficit += minBand - clamped[i];
-        clamped[i] = minBand;
-      } else {
-        flexible += clamped[i] - minBand;
-      }
+    final n = fractions.length;
+    final usable = totalWidth - gap * (n - 1);
+    // Degenerate width: floors can't fit — equal split, never negative.
+    if (usable <= minBand * n) {
+      final w = (usable / n).clamp(0.0, double.infinity);
+      return List.filled(n, w);
     }
-    if (deficit > 0 && flexible > 0) {
-      for (var i = 0; i < clamped.length; i++) {
-        if (clamped[i] > minBand) {
-          clamped[i] -= deficit * ((clamped[i] - minBand) / flexible);
+    // Treat fractions as weights; all-zero -> equal weights (full-width bar).
+    final sum = fractions.fold(0.0, (a, b) => a + b);
+    final weights = sum > 0
+        ? [for (final f in fractions) f / sum]
+        : List.filled(n, 1 / n);
+    // Lock under-floor bands at minBand; redistribute the rest by weight.
+    final widths = List<double>.filled(n, 0);
+    final locked = List<bool>.filled(n, false);
+    for (var pass = 0; pass < n; pass++) {
+      final lockedWidth =
+          [for (var i = 0; i < n; i++) if (locked[i]) minBand]
+              .fold(0.0, (a, b) => a + b);
+      final freeWidth = usable - lockedWidth;
+      final freeWeight =
+          [for (var i = 0; i < n; i++) if (!locked[i]) weights[i]]
+              .fold(0.0, (a, b) => a + b);
+      var changed = false;
+      for (var i = 0; i < n; i++) {
+        if (locked[i]) {
+          widths[i] = minBand;
+          continue;
+        }
+        widths[i] = freeWeight > 0
+            ? freeWidth * (weights[i] / freeWeight)
+            : freeWidth / (n - locked.where((l) => l).length);
+        if (widths[i] < minBand) {
+          locked[i] = true;
+          changed = true;
         }
       }
+      if (!changed) break;
     }
-    return clamped;
+    for (var i = 0; i < n; i++) {
+      if (widths[i] < minBand) widths[i] = minBand;
+    }
+    return widths;
   }
 
   @override
