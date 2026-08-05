@@ -6,6 +6,7 @@ import 'pages/data_page.dart';
 import 'pages/foundations_page.dart';
 import 'pages/inputs_page.dart';
 import 'pages/navigation_page.dart';
+import 'pages/specialized_page.dart';
 import 'pages/status_page.dart';
 
 export 'pages/foundations_page.dart';
@@ -19,6 +20,7 @@ final Map<String, WidgetBuilder> galleryPages = {
   'Data': (_) => const DataGalleryPage(),
   'Inputs': (_) => const InputsGalleryPage(),
   'Navigation': (_) => const NavigationGalleryPage(),
+  'Specialized': (_) => const SpecializedGalleryPage(),
 };
 
 class GalleryScreen extends StatefulWidget {
