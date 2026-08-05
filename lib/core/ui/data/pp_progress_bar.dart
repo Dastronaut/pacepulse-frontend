@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
 
-/// 8px pill progress (D1-B10). Fill animates slow/decelerate; goal hit
+/// 8px pill progress (D1-B10; human ruling 2026-08-03: spec literals with documented provenance). Fill animates slow/decelerate; goal hit
 /// flips fill (and value text, if given) to success.
 class PPProgressBar extends StatelessWidget {
   const PPProgressBar({

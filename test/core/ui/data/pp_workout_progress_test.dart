@@ -72,4 +72,27 @@ void main() {
         .decoration as BoxDecoration;
     expect(fill.color, PPColors.dark.success);
   });
+
+  testWidgets('long title truncates to single line within 300px width',
+      (tester) async {
+    await tester.pumpWidget(wrap(SizedBox(
+      width: 300,
+      child: const PPWorkoutCard(
+        icon: PPIcons.footprints,
+        title:
+            'This is a very long workout title that should truncate and not wrap to multiple lines',
+        meta: 'Today',
+        stats: '5 km',
+      ),
+    )));
+    await tester.pumpAndSettle();
+    // Find the title Text widget by searching for the one containing part of the title
+    final titleWidgets = find.byWidgetPredicate((w) {
+      if (w is! Text) return false;
+      return w.data?.contains('very long') ?? false;
+    });
+    expect(titleWidgets, findsOneWidget);
+    final titleText = tester.widget<Text>(titleWidgets);
+    expect(titleText.maxLines, 1);
+  });
 }

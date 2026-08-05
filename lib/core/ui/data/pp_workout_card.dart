@@ -5,7 +5,7 @@ import '../foundations/pp_icon.dart';
 import '../foundations/pp_pressable.dart';
 import '../status/pp_chip.dart';
 
-/// Recent-workout list card (D1-B4). The WHOLE card is the tap target.
+/// Recent-workout list card (D1-B4; human ruling 2026-08-03: spec literals with documented provenance). The WHOLE card is the tap target.
 class PPWorkoutCard extends StatefulWidget {
   const PPWorkoutCard({
     super.key,
@@ -77,7 +77,8 @@ class _PPWorkoutCardState extends State<PPWorkoutCard> {
                     Flexible(
                       child: Text(widget.title,
                           style: theme.textTheme.titleMedium,
-                          overflow: TextOverflow.ellipsis),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1),
                     ),
                     if (widget.showPr) ...[
                       const SizedBox(width: PPSpacing.s2),
