@@ -4,7 +4,9 @@ import '../../theme/theme.dart';
 import '../foundations/pp_icon.dart';
 import '../foundations/pp_pressable.dart';
 
-/// Nested dashboard stat tile (D1-B3): lives INSIDE cards.
+/// Nested dashboard stat tile. Background role split: dark surfaceContainerHigh /
+/// light surfaceContainer (D1-B3; human ruling 2026-08-03: spec literals with
+/// documented provenance). Lives INSIDE cards.
 class PPStatTile extends StatelessWidget {
   const PPStatTile({
     super.key,

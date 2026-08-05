@@ -5,8 +5,10 @@ import '../foundations/pp_live_dot.dart';
 
 enum PPMetricFace { display, mono }
 
-/// Live-workout hero numeral block (D1-B2). Metrics sit straight on the
-/// canvas — no card. Every digit is tabular.
+/// Live-workout hero numeral block. Mono face value scaled to 72 w700, unit 24
+/// w600, live dot 10 (D1-B2; human ruling 2026-08-03: spec literals with
+/// documented provenance). Metrics sit straight on the canvas — no card.
+/// Every digit is tabular.
 class PPMetricDisplay extends StatelessWidget {
   const PPMetricDisplay({
     super.key,
