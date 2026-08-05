@@ -105,7 +105,8 @@ class PPAvatarStack extends StatelessWidget {
             child: Text('+$overflow',
                 style: Theme.of(context).textTheme.labelMedium!.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: scheme.onPrimaryContainer)),
+                    color: scheme.onPrimaryContainer,
+                    fontFeatures: const [FontFeature.tabularFigures()])),
           ),
         ),
     ];

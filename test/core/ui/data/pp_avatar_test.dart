@@ -47,5 +47,10 @@ void main() {
     // width = 32 + 3*(32-8) + ring allowance (4 per side edge).
     final w = tester.getSize(find.byType(PPAvatarStack)).width;
     expect(w, lessThan(4 * 36)); // strictly narrower than unoverlapped
+    // Verify tabular figures on overflow count (CLAUDE.md: live-updating numbers)
+    final overflowText = tester.widget<Text>(find.text('+3'));
+    expect(
+        overflowText.style!.fontFeatures,
+        contains(const FontFeature.tabularFigures()));
   });
 }
