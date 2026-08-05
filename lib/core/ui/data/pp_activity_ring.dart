@@ -90,9 +90,14 @@ class _RingPainter extends CustomPainter {
       old.thickness != thickness;
 }
 
-/// The dashboard triad: move/exercise/steps at 200/156/112, stroke 16
-/// (8px inter-ring gap). Values animate in over [PPMotion.deliberate]
-/// with [PPMotion.energetic]; [celebrateToken] change pulses 1->1.08->1.
+/// The dashboard triad (D1-B1): diameters 200/156/112 at stroke 16
+/// (proportional via size/200), celebrate pulse 1 -> 1.08 -> 1 —
+/// design-specified geometry with no CSS custom property (human ruling
+/// 2026-08-03: spec literals with documented provenance). Note: the
+/// D1 sheet's "8px ring gap" annotation is inconsistent with its own
+/// diameters; as built, the clear gap between strokes is 6px, and the
+/// diameters govern. Values animate in over [PPMotion.deliberate]
+/// with [PPMotion.energetic]; [celebrateToken] change triggers pulse.
 class PPActivityRings extends StatefulWidget {
   const PPActivityRings({
     super.key,
