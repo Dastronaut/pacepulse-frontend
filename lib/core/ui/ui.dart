@@ -32,3 +32,4 @@ export 'data/pp_splits.dart';
 export 'data/pp_avatar.dart';
 export 'data/pp_leaderboard_row.dart';
 export 'inputs/pp_text_field.dart';
+export 'inputs/pp_settings_row.dart';

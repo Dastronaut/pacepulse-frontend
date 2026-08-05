@@ -15,6 +15,8 @@ class _InputsGalleryPageState extends State<InputsGalleryPage> {
   final TextEditingController _defaultController = TextEditingController();
   final TextEditingController _hintController = TextEditingController();
   final TextEditingController _errorController = TextEditingController();
+  bool _notificationsEnabled = false;
+  bool _darkModeEnabled = true;
 
   @override
   void dispose() {
@@ -80,6 +82,38 @@ class _InputsGalleryPageState extends State<InputsGalleryPage> {
               const PPTextField(
                 label: 'Locked Field',
                 enabled: false,
+              ),
+            ],
+          ),
+        ),
+        GallerySection(
+          title: 'PPSettingsGroup',
+          child: PPSettingsGroup(
+            children: [
+              PPSettingsRow.toggle(
+                icon: PPIcons.bell,
+                title: 'Notifications',
+                value: _notificationsEnabled,
+                onChanged: (value) =>
+                    setState(() => _notificationsEnabled = value),
+              ),
+              PPSettingsRow.value(
+                icon: PPIcons.gauge,
+                title: 'Units',
+                value: 'Metric',
+                onTap: () {},
+              ),
+              PPSettingsRow.toggle(
+                icon: PPIcons.zap,
+                title: 'Dark Mode',
+                value: _darkModeEnabled,
+                onChanged: (value) =>
+                    setState(() => _darkModeEnabled = value),
+              ),
+              PPSettingsRow.plain(
+                icon: PPIcons.user,
+                title: 'Profile',
+                onTap: () {},
               ),
             ],
           ),
