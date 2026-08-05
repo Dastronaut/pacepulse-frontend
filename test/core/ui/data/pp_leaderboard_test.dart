@@ -37,7 +37,7 @@ void main() {
     expect(deco.color, ppDarkColorScheme.primaryContainer);
     expect(find.text('+0:04'), findsOneWidget);
     expect(find.byType(PPLivePulse), findsOneWidget);
-    expect(tester.getSize(find.byType(PPLeaderboardRow)).height, 64);
+    expect(tester.getSize(find.byType(PPLeaderboardRow)).height, greaterThanOrEqualTo(64.0));
   });
 
   testWidgets('rank deltas: up success, down error', (tester) async {
@@ -64,5 +64,35 @@ void main() {
     expect(find.text('—'), findsOneWidget);
     expect(find.text('reconnecting…'), findsOneWidget);
     expect(find.byType(PPLiveDot), findsNothing);
+  });
+
+  testWidgets('empty name: avatar shows fallback ?', (tester) async {
+    await tester.pumpWidget(wrap(const PPLeaderboardRow(
+      rank: 3,
+      name: '',
+      pace: '5:15',
+      progress: 0.35,
+    )));
+    expect(find.byType(PPAvatar), findsOneWidget);
+    final avatar = tester.widget<PPAvatar>(find.byType(PPAvatar));
+    expect(avatar.initials, '?');
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('dropped row at textScale 1.3: no overflow, no exception',
+      (tester) async {
+    await tester.pumpWidget(wrap(
+      const PPLeaderboardRow(
+        rank: 5,
+        name: 'Rosa',
+        pace: '5:12',
+        progress: 0.2,
+        isDropped: true,
+      ),
+      textScale: 1.3,
+    ));
+    expect(tester.takeException(), isNull);
+    expect(tester.getSize(find.byType(PPLeaderboardRow)).height,
+        greaterThanOrEqualTo(64.0));
   });
 }

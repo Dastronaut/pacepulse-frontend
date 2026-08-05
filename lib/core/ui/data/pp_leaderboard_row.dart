@@ -5,8 +5,8 @@ import '../foundations/pp_live_dot.dart';
 import '../foundations/pp_live_pulse.dart';
 import 'pp_avatar.dart';
 
-/// Live race leaderboard row (D1-B9). The row is DUMB: reorder
-/// animation, delta visibility timing (4s) and overtake pulse triggers
+/// Live race leaderboard row. Provenance: D1-B9 (row 64, rank col 22, 4px progress bar) + human ruling 2026-08-03: spec literals with documented provenance.
+/// The row is DUMB: reorder animation, delta visibility timing (4s) and overtake pulse triggers
 /// are the consumer's responsibility.
 class PPLeaderboardRow extends StatelessWidget {
   const PPLeaderboardRow({
@@ -42,7 +42,7 @@ class PPLeaderboardRow extends StatelessWidget {
 
     Widget row = Container(
       key: const Key('pp_leader_row_box'),
-      height: 64,
+      constraints: const BoxConstraints(minHeight: 64),
       padding: const EdgeInsets.symmetric(
           horizontal: PPSpacing.s3, vertical: PPSpacing.s2),
       decoration: BoxDecoration(
@@ -68,7 +68,7 @@ class PPLeaderboardRow extends StatelessWidget {
             ),
           ],
           const SizedBox(width: PPSpacing.s3),
-          PPAvatar(initials: avatarInitials ?? name.substring(0, 1)),
+          PPAvatar(initials: avatarInitials ?? (name.isEmpty ? '?' : name.substring(0, 1))),
           const SizedBox(width: PPSpacing.s3),
           Expanded(
             child: Column(
