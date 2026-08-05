@@ -84,6 +84,49 @@ class DataGalleryPage extends StatelessWidget {
             ],
           ),
         ),
+        const GallerySection(
+          title: 'PPWorkoutCard',
+          child: PPWorkoutCard(
+            icon: PPIcons.footprints,
+            title: 'Morning run',
+            meta: 'Today · 06:24',
+            stats: '5.21 km · 28:41 · 5:31 /km',
+            showPr: false,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPWorkoutCard (with PR)',
+          child: PPWorkoutCard(
+            icon: PPIcons.bike,
+            title: 'Evening ride',
+            meta: 'Yesterday · 19:10',
+            stats: '18.4 km · 54:20 · 2:56 /km',
+            showPr: true,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPProgressBar (0.62)',
+          child: SizedBox(
+            width: 200,
+            child: PPProgressBar(
+              value: 0.62,
+              label: 'Distance',
+              valueLabel: '6.2 km',
+            ),
+          ),
+        ),
+        const GallerySection(
+          title: 'PPProgressBar (goal hit 1.0)',
+          child: SizedBox(
+            width: 200,
+            child: PPProgressBar(
+              value: 1.0,
+              label: 'Calories',
+              valueLabel: '500 kcal',
+              goalHit: true,
+            ),
+          ),
+        ),
       ],
     );
   }

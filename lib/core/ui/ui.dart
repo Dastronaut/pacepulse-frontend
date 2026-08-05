@@ -23,3 +23,5 @@ export 'status/pp_countdown_overlay.dart';
 export 'data/pp_activity_ring.dart';
 export 'data/pp_metric_display.dart';
 export 'data/pp_stat_tile.dart';
+export 'data/pp_workout_card.dart';
+export 'data/pp_progress_bar.dart';
