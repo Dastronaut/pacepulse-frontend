@@ -30,3 +30,4 @@ export 'data/pp_elevation_profile.dart';
 export 'data/pp_hr_zone_bar.dart';
 export 'data/pp_splits.dart';
 export 'data/pp_avatar.dart';
+export 'data/pp_leaderboard_row.dart';

@@ -218,6 +218,37 @@ class DataGalleryPage extends StatelessWidget {
             ],
           ),
         ),
+        const GallerySection(
+          title: 'PPLeaderboardRow',
+          child: Column(
+            children: [
+              PPLeaderboardRow(
+                rank: 1,
+                name: 'Marta',
+                pace: '5:02',
+                progress: 0.78,
+                rankDelta: 1,
+              ),
+              SizedBox(height: 12),
+              PPLeaderboardRow(
+                rank: 2,
+                name: 'You',
+                pace: '5:08',
+                progress: 0.46,
+                isSelf: true,
+                selfDeltaLabel: '+0:04',
+              ),
+              SizedBox(height: 12),
+              PPLeaderboardRow(
+                rank: 5,
+                name: 'Rosa',
+                pace: '5:12',
+                progress: 0.2,
+                isDropped: true,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
