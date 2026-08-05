@@ -188,6 +188,36 @@ class DataGalleryPage extends StatelessWidget {
             ],
           ),
         ),
+        GallerySection(
+          title: 'PPAvatar / stack',
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const PPAvatar(initials: 'TL', size: PPAvatarSize.s48),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'MK', size: PPAvatarSize.s40),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'JT', size: PPAvatarSize.s32),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'AL', size: PPAvatarSize.s24),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const PPAvatar(
+                initials: 'PR',
+                size: PPAvatarSize.s40,
+                premium: true,
+              ),
+              const SizedBox(height: 16),
+              const PPAvatarStack(
+                initials: ['MK', 'JT', 'AL'],
+                overflow: 3,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
