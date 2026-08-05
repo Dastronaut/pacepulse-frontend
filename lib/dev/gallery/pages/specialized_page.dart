@@ -34,8 +34,13 @@ class SpecializedGalleryPage extends StatelessWidget {
             children: [
               PPDeviceTile(
                 name: 'Polar H10',
-                rssiDbm: -85,
+                rssiDbm: -70,
                 batteryPct: 92,
+                onConnect: () {},
+              ),
+              PPDeviceTile(
+                name: 'Coros Pod (weak signal)',
+                rssiDbm: -88,
                 onConnect: () {},
               ),
               const PPDeviceTile(
