@@ -61,4 +61,12 @@ void main() {
         closeTo(PPColors.chartFillAlpha, 0.01));
     expect(find.textContaining('12'), findsWidgets); // gain shown
   });
+
+  testWidgets('elevation profile: empty data does not throw and shows '
+      'zeroed summary', (tester) async {
+    await tester.pumpWidget(wrap(const SizedBox(
+        width: 350, child: PPElevationProfile(elevations: []))));
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('↗ 0 m'), findsOneWidget);
+  });
 }

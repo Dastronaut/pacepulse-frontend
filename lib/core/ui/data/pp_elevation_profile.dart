@@ -35,6 +35,26 @@ class PPElevationProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final pp = theme.extension<PPColors>()!;
+
+    // Empty guard: treadmill/indoor workouts or GPS without altitude
+    // can hand this widget an empty series. reduce() would throw, so
+    // render the reserved chart height with a zeroed summary instead
+    // of crashing the build.
+    if (elevations.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: height),
+          const SizedBox(height: PPSpacing.s2),
+          Text(
+            '↗ 0 m   ↘ 0 m',
+            style: PPTextStyles.monoS
+                .copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ],
+      );
+    }
+
     final minE = elevations.reduce((a, b) => a < b ? a : b);
     final maxE = elevations.reduce((a, b) => a > b ? a : b);
     final pad = (maxE - minE) * 0.1;
