@@ -35,24 +35,26 @@ class PPCountdownOverlay extends StatefulWidget {
     required VoidCallback onFinished,
     VoidCallback? onCancelled,
   }) {
-    return Navigator.of(context).push(PageRouteBuilder<void>(
-      opaque: false,
-      barrierDismissible: false,
-      transitionDuration: PPMotion.base,
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          PPCountdownOverlay(
-        overline: overline,
-        caption: caption,
-        onFinished: () {
-          Navigator.of(context).pop();
-          onFinished();
-        },
-        onCancelled: () {
-          Navigator.of(context).pop();
-          onCancelled?.call();
-        },
+    return Navigator.of(context).push(
+      PageRouteBuilder<void>(
+        opaque: false,
+        barrierDismissible: false,
+        transitionDuration: PPMotion.base,
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            PPCountdownOverlay(
+              overline: overline,
+              caption: caption,
+              onFinished: () {
+                Navigator.of(context).pop();
+                onFinished();
+              },
+              onCancelled: () {
+                Navigator.of(context).pop();
+                onCancelled?.call();
+              },
+            ),
       ),
-    ));
+    );
   }
 
   @override
@@ -75,8 +77,10 @@ class _PPCountdownOverlayState extends State<PPCountdownOverlay>
   // 1s pumps per beat instead of one in widget tests — Timer, driven by
   // the same fake clock, doesn't have that warm-up frame and fires
   // exactly at the requested elapsed duration.
-  late final AnimationController _beat =
-      AnimationController(vsync: this, duration: PPMotion.countdownBeat);
+  late final AnimationController _beat = AnimationController(
+    vsync: this,
+    duration: PPMotion.countdownBeat,
+  );
 
   @override
   void initState() {
@@ -143,9 +147,12 @@ class _PPCountdownOverlayState extends State<PPCountdownOverlay>
       // provenance).
       final scale = TweenSequence<double>([
         TweenSequenceItem(
-            tween: Tween(begin: 1.6, end: 1.0)
-                .chain(CurveTween(curve: PPMotion.energetic)),
-            weight: 20),
+          tween: Tween(
+            begin: 1.6,
+            end: 1.0,
+          ).chain(CurveTween(curve: PPMotion.energetic)),
+          weight: 20,
+        ),
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 60),
         TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.7), weight: 20),
       ]).animate(_beat);
@@ -160,39 +167,60 @@ class _PPCountdownOverlayState extends State<PPCountdownOverlay>
       );
     }
 
-    return Material(
-      color: theme.colorScheme.scrim,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(widget.overline.toUpperCase(),
-                      style: theme.textTheme.labelSmall!
-                          .copyWith(color: PPPalette.mist)),
-                  const SizedBox(height: PPSpacing.s4),
-                  animated,
-                  if (widget.caption != null) ...[
+    return PopScope<void>(
+      // Android system back (and any other maybePop-driven dismissal) must
+      // run the same cancel path as the Cancel button exactly once, not
+      // silently pop the route out from under the running countdown
+      // (final-review finding #4). canPop:false only intercepts
+      // maybePop/system-back attempts — the explicit Navigator.pop() calls
+      // inside widget.onFinished/widget.onCancelled (wired by `show`) are
+      // unaffected and still dismiss the route normally; onPopInvokedWithResult
+      // then fires with didPop:true for those and is ignored below.
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _cancel();
+      },
+      child: Material(
+        color: theme.colorScheme.scrim,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.overline.toUpperCase(),
+                      style: theme.textTheme.labelSmall!.copyWith(
+                        color: PPPalette.mist,
+                      ),
+                    ),
                     const SizedBox(height: PPSpacing.s4),
-                    Text(widget.caption!,
-                        style: theme.textTheme.labelMedium!
-                            .copyWith(color: PPPalette.steel)),
+                    animated,
+                    if (widget.caption != null) ...[
+                      const SizedBox(height: PPSpacing.s4),
+                      Text(
+                        widget.caption!,
+                        style: theme.textTheme.labelMedium!.copyWith(
+                          color: PPPalette.steel,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-            // Cancel bottom offset (D1-specced, Flow 2 S5 / D1-E2 + human
-            // ruling 2026-08-03).
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 36),
-                child: _CancelButton(onPressed: _cancel),
+              // Cancel bottom offset (D1-specced, Flow 2 S5 / D1-E2 + human
+              // ruling 2026-08-03).
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 36),
+                  child: _CancelButton(onPressed: _cancel),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -248,7 +276,9 @@ class _CancelButtonState extends State<_CancelButton> {
           child: Container(
             constraints: const BoxConstraints(minHeight: PPSpacing.tapMin),
             padding: const EdgeInsets.symmetric(
-                horizontal: PPSpacing.s6, vertical: PPSpacing.s2),
+              horizontal: PPSpacing.s6,
+              vertical: PPSpacing.s2,
+            ),
             decoration: ShapeDecoration(
               shape: StadiumBorder(
                 side: BorderSide(
@@ -260,8 +290,9 @@ class _CancelButtonState extends State<_CancelButton> {
             child: Center(
               child: Text(
                 'Cancel',
-                style: theme.textTheme.labelLarge!
-                    .copyWith(color: PPPalette.mist),
+                style: theme.textTheme.labelLarge!.copyWith(
+                  color: PPPalette.mist,
+                ),
               ),
             ),
           ),

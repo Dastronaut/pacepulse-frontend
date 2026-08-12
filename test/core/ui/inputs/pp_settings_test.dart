@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pacepulse/core/theme/theme.dart';
@@ -99,13 +101,18 @@ void main() {
             onChanged: (v) => set(() => on = v)),
       ]),
     )));
-    // Verify Semantics widget exists with toggled state
-    expect(find.byType(Semantics), findsWidgets);
+    // The row must actually flip toggled:false -> toggled:true across a
+    // tap, not just merely carry *some* non-null semantics node.
+    // Tristate.isFalse/.isTrue (as opposed to .none) is what proves the
+    // node carries a toggled-state at all — the merged old hasToggledState
+    // + isToggled flag pair is now this single tri-state field.
     var semantics = tester.getSemantics(find.byType(PPSettingsRow));
-    expect(semantics, isNotNull);
+    expect(semantics.flagsCollection.isToggled, Tristate.isFalse);
+
     await tester.tap(find.byType(PPSettingsRow));
     await tester.pumpAndSettle();
+
     semantics = tester.getSemantics(find.byType(PPSettingsRow));
-    expect(semantics, isNotNull);
+    expect(semantics.flagsCollection.isToggled, Tristate.isTrue);
   });
 }

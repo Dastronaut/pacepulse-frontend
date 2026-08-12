@@ -12,20 +12,23 @@ class PPSplitsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pp = Theme.of(context).extension<PPColors>()!;
-    final style = Theme.of(context)
-        .textTheme
-        .labelSmall!
-        .copyWith(color: pp.onSurfaceFaint);
+    final style = Theme.of(
+      context,
+    ).textTheme.labelSmall!.copyWith(color: pp.onSurfaceFaint);
     return SizedBox(
       height: 36,
-      child: Row(children: [
-        SizedBox(width: 40, child: Text('KM', style: style)),
-        Expanded(
-            child: Text('PACE', style: style, textAlign: TextAlign.right)),
-        SizedBox(
+      child: Row(
+        children: [
+          SizedBox(width: 40, child: Text('KM', style: style)),
+          Expanded(
+            child: Text('PACE', style: style, textAlign: TextAlign.right),
+          ),
+          SizedBox(
             width: 64,
-            child: Text('DELTA', style: style, textAlign: TextAlign.right)),
-      ]),
+            child: Text('DELTA', style: style, textAlign: TextAlign.right),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -52,6 +55,7 @@ class PPSplitsRow extends StatelessWidget {
   String get _delta {
     final d = deltaSeconds;
     if (d == null) return '—';
+    if (d == 0) return '0:00'; // even pace: no sign, neutral color below
     final sign = d < 0 ? '-' : '+';
     final abs = d.abs();
     return '$sign${abs ~/ 60}:${(abs % 60).toString().padLeft(2, '0')}';
@@ -62,43 +66,54 @@ class PPSplitsRow extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final pp = theme.extension<PPColors>()!;
-    final deltaColor = deltaSeconds == null
-        ? pp.onSurfaceFaint
+    final deltaColor = (deltaSeconds == null || deltaSeconds == 0)
+        ? pp
+              .onSurfaceFaint // null (no prior split) and even pace share the neutral treatment
         : deltaSeconds! < 0
-            ? pp.success
-            : scheme.error;
+        ? pp.success
+        : scheme.error;
 
     return Container(
       height: 36,
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-              color: scheme.outlineVariant, width: PPBorders.hairline),
-        ),
-      ),
-      child: Row(children: [
-        SizedBox(
-            width: 40,
-            child: Text(km,
-                style:
-                    PPTextStyles.monoS.copyWith(color: scheme.onSurfaceVariant))),
-        Expanded(
-          child: Text(
-            pace,
-            textAlign: TextAlign.right,
-            style: PPTextStyles.monoS.copyWith(
-              color: fastest ? pp.accentText : scheme.onSurface,
-              fontWeight: fastest ? FontWeight.w700 : FontWeight.w500,
-            ),
+            color: scheme.outlineVariant,
+            width: PPBorders.hairline,
           ),
         ),
-        SizedBox(
-          width: 64,
-          child: Text(_delta,
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 40,
+            child: Text(
+              km,
+              style: PPTextStyles.monoS.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              pace,
               textAlign: TextAlign.right,
-              style: PPTextStyles.monoS.copyWith(color: deltaColor)),
-        ),
-      ]),
+              style: PPTextStyles.monoS.copyWith(
+                color: fastest ? pp.accentText : scheme.onSurface,
+                fontWeight: fastest ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 64,
+            child: Text(
+              _delta,
+              textAlign: TextAlign.right,
+              style: PPTextStyles.monoS.copyWith(color: deltaColor),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

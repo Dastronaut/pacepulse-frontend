@@ -61,17 +61,13 @@ void main() {
     expect(label.style!.color, PPColors.light.accentText); // 0xFFA24A0C
   });
 
-  testWidgets('disabled danger uses errorDisabled fill and blocks taps',
-      (tester) async {
-    var taps = 0;
+  testWidgets('disabled danger uses errorDisabled fill', (tester) async {
     await tester.pumpWidget(wrap(PPButton(
       label: 'Delete',
       variant: PPButtonVariant.danger,
       onPressed: null,
     )));
     expect(_decoOf(tester).color, PPColors.dark.errorDisabled);
-    await tester.tap(find.byType(PPButton));
-    expect(taps, 0);
   });
 
   testWidgets('loading: spinner shown, label hidden, tap ignored',

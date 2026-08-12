@@ -1,3 +1,5 @@
+import 'dart:ui' show Tristate;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pacepulse/core/theme/theme.dart';
@@ -50,6 +52,33 @@ void main() {
     await tester.tap(find.byType(PPPressable));
     await tester.pumpAndSettle();
     expect(pressed, 0);
+  });
+
+  testWidgets(
+      'disabled PPPressable still exposes button:true, enabled:false (Material convention)',
+      (tester) async {
+    await tester.pumpWidget(wrap(PPPressable(
+      enabled: false,
+      onPressed: () {},
+      child: const SizedBox(width: 60, height: 60),
+    )));
+    // PPTapTarget is deliberately the outermost render object of
+    // PPPressable (see its class doc) and carries no semantics config of
+    // its own, so getSemantics(find.byType(PPPressable)) walks *up* past
+    // the real merged node and lands on an ancestor (e.g. the Scaffold's
+    // route-scope node) instead. button/enabled/label actually merge at
+    // the GestureDetector below it, so scope the finder there.
+    final semantics = tester.getSemantics(find.descendant(
+      of: find.byType(PPPressable),
+      matching: find.byType(GestureDetector),
+    ));
+    final flags = semantics.flagsCollection;
+    expect(flags.isButton, isTrue);
+    // Tristate.isFalse (not .none) proves the enabled-state is reported
+    // at all — i.e. the node still carries a "disabled" role rather than
+    // dropping enabled-state entirely (SemanticsFlag.hasFlag's old
+    // hasEnabledState + isEnabled pair is now this single tri-state field).
+    expect(flags.isEnabled, Tristate.isFalse);
   });
 
   testWidgets('PPTapTarget accepts taps outside a small child',

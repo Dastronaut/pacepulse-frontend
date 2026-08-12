@@ -39,7 +39,8 @@ class _PPPressableState extends State<PPPressable> {
   bool _down = false;
 
   bool get _interactive =>
-      widget.enabled && (widget.onPressed != null || widget.onLongPress != null);
+      widget.enabled &&
+      (widget.onPressed != null || widget.onLongPress != null);
 
   void _setDown(bool v) {
     if (_down == v) return;
@@ -51,7 +52,12 @@ class _PPPressableState extends State<PPPressable> {
   Widget build(BuildContext context) {
     return PPTapTarget(
       child: Semantics(
-        button: _interactive,
+        // Material convention: a disabled control keeps its button role
+        // (button:true) and reports enabled:false separately — reporting
+        // button:false on disable drops the role entirely, which reads to
+        // screen readers as "not a control" rather than "a disabled
+        // control" (final-review finding #2).
+        button: widget.onPressed != null || widget.onLongPress != null,
         enabled: widget.enabled,
         label: widget.semanticLabel,
         child: GestureDetector(
@@ -101,7 +107,10 @@ class PPTapTarget extends SingleChildRenderObjectWidget {
       RenderPPTapTarget(minSize);
 
   @override
-  void updateRenderObject(BuildContext context, RenderPPTapTarget renderObject) {
+  void updateRenderObject(
+    BuildContext context,
+    RenderPPTapTarget renderObject,
+  ) {
     renderObject.minSize = minSize;
   }
 }

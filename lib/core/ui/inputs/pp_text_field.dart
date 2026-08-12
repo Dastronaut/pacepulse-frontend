@@ -62,80 +62,90 @@ class _PPTextFieldState extends State<PPTextField> {
     final borderColor = hasError
         ? scheme.error
         : focused
-            ? pp.accentText
-            : scheme.outline;
+        ? pp.accentText
+        : scheme.outline;
     final double borderWidth = !widget.enabled
         ? 0
         : (hasError || focused)
-            ? PPBorders.strong // 2
-            : dark
-                ? 0 // D1-C1: dark rest = filled, no border
-                : PPBorders.hairline; // 1 (light rest keeps hairline outline)
+        ? PPBorders
+              .strong // 2
+        : dark
+        ? 0 // D1-C1: dark rest = filled, no border
+        : PPBorders.hairline; // 1 (light rest keeps hairline outline)
     final border = borderWidth == 0
         ? null
         : Border.all(color: borderColor, width: borderWidth);
     final hPad = 16.0 - borderWidth; // effective inset always 16 — zero shift
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          widget.label,
-          style: theme.textTheme.labelMedium!.copyWith(
-            color: focused && !hasError
-                ? pp.accentText
-                : scheme.onSurfaceVariant,
+    // The visible label is a sibling Text, not a semantic label owner, so
+    // the collapsed TextField exposes no accessible name on its own.
+    // Wrapping the field in a plain Semantics(label:) (no container/merge
+    // overrides) attaches the name without shadowing the inner TextField's
+    // own editable-value node (final-review finding #3). Errors are
+    // appended so they're announced alongside the field's name.
+    return Semantics(
+      label: hasError ? '${widget.label}, ${widget.errorText}' : widget.label,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.label,
+            style: theme.textTheme.labelMedium!.copyWith(
+              color: focused && !hasError
+                  ? pp.accentText
+                  : scheme.onSurfaceVariant,
+            ),
           ),
-        ),
-        const SizedBox(height: PPSpacing.s2),
-        AnimatedContainer(
-          key: const Key('pp_field_box'),
-          duration: PPMotion.instant,
-          height: 52,
-          padding: EdgeInsets.symmetric(horizontal: hPad),
-          decoration: BoxDecoration(
-            color: !widget.enabled
-                ? scheme.outlineVariant
-                : dark
-                    ? scheme.surfaceContainer
-                    : scheme.surface,
-            borderRadius: BorderRadius.circular(PPRadius.sm),
-            border: border,
-          ),
-          child: Center(
-            child: TextField(
-              controller: widget.controller,
-              focusNode: _focus,
-              enabled: widget.enabled,
-              obscureText: widget.obscureText,
-              keyboardType: widget.keyboardType,
-              onChanged: widget.onChanged,
-              cursorColor: pp.accentText,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: widget.enabled
-                    ? scheme.onSurface
-                    : pp.onSurfaceDisabled,
-              ),
-              decoration: InputDecoration(
-                isCollapsed: true,
-                border: InputBorder.none,
-                hintText: widget.hint,
-                hintStyle: theme.textTheme.bodyMedium!
-                    .copyWith(color: pp.onSurfaceFaint),
+          const SizedBox(height: PPSpacing.s2),
+          AnimatedContainer(
+            key: const Key('pp_field_box'),
+            duration: PPMotion.instant,
+            height: 52,
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            decoration: BoxDecoration(
+              color: !widget.enabled
+                  ? scheme.outlineVariant
+                  : dark
+                  ? scheme.surfaceContainer
+                  : scheme.surface,
+              borderRadius: BorderRadius.circular(PPRadius.sm),
+              border: border,
+            ),
+            child: Center(
+              child: TextField(
+                controller: widget.controller,
+                focusNode: _focus,
+                enabled: widget.enabled,
+                obscureText: widget.obscureText,
+                keyboardType: widget.keyboardType,
+                onChanged: widget.onChanged,
+                cursorColor: pp.accentText,
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: widget.enabled
+                      ? scheme.onSurface
+                      : pp.onSurfaceDisabled,
+                ),
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  border: InputBorder.none,
+                  hintText: widget.hint,
+                  hintStyle: theme.textTheme.bodyMedium!.copyWith(
+                    color: pp.onSurfaceFaint,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-        if (hasError) ...[
-          const SizedBox(height: PPSpacing.s2),
-          Text(
-            widget.errorText!,
-            style:
-                theme.textTheme.labelMedium!.copyWith(color: scheme.error),
-          ),
+          if (hasError) ...[
+            const SizedBox(height: PPSpacing.s2),
+            Text(
+              widget.errorText!,
+              style: theme.textTheme.labelMedium!.copyWith(color: scheme.error),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

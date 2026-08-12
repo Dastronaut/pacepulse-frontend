@@ -79,4 +79,21 @@ void main() {
     final deco = _box(tester).decoration! as BoxDecoration;
     expect(deco.color, ppDarkColorScheme.outlineVariant);
   });
+
+  testWidgets('label is programmatically associated for screen readers',
+      (tester) async {
+    await tester.pumpWidget(wrap(const PPTextField(label: 'Email')));
+    final semantics = tester.getSemantics(find.byType(PPTextField));
+    expect(semantics.label, contains('Email'));
+  });
+
+  testWidgets('errorText is appended to the semantic label so it is announced',
+      (tester) async {
+    await tester.pumpWidget(wrap(const PPTextField(
+      label: 'Email',
+      errorText: 'Enter a valid email address',
+    )));
+    final semantics = tester.getSemantics(find.byType(PPTextField));
+    expect(semantics.label, contains('Enter a valid email address'));
+  });
 }

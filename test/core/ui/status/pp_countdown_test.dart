@@ -69,6 +69,44 @@ void main() {
     expect(finished, 0);
   });
 
+  testWidgets(
+      'system back (maybePop) triggers onCancelled exactly once, never onFinished',
+      (tester) async {
+    var cancelled = 0, finished = 0;
+    await tester.pumpWidget(wrap(Builder(
+      builder: (context) => ElevatedButton(
+        onPressed: () => PPCountdownOverlay.show(
+          context,
+          overline: 'Starting run',
+          onFinished: () => finished++,
+          onCancelled: () => cancelled++,
+        ),
+        child: const Text('Go'),
+      ),
+    )));
+    await tester.tap(find.text('Go'));
+    await tester.pump();
+    await tester.pump(PPMotion.base); // let the push transition settle
+    expect(find.byType(PPCountdownOverlay), findsOneWidget);
+
+    // Simulate Android/system back mid-countdown (still on "3").
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    await navigator.maybePop();
+    await tester.pump();
+
+    expect(cancelled, 1);
+    expect(finished, 0);
+
+    // Push well past the remaining beats: the cancelled route must never
+    // go on to fire onFinished, and the explicit Navigator.pop() inside
+    // the wrapped onCancelled (didPop:true) must not re-enter _cancel()
+    // and double-fire onCancelled.
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+    expect(cancelled, 1);
+    expect(finished, 0);
+  });
+
   testWidgets('reduced motion: no ScaleTransition anywhere',
       (tester) async {
     await tester.pumpWidget(wrap(

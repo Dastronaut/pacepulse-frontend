@@ -117,4 +117,12 @@ void main() {
         ppDarkColorScheme.error);
     expect(find.text('—'), findsOneWidget);
   });
+
+  testWidgets('splits: zero delta renders 0:00 in neutral color, not error red',
+      (tester) async {
+    await tester.pumpWidget(
+        wrap(const PPSplitsRow(km: '4', pace: '5:40', deltaSeconds: 0)));
+    final delta = tester.widget<Text>(find.text('0:00'));
+    expect(delta.style!.color, PPColors.dark.onSurfaceFaint);
+  });
 }

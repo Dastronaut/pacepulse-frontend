@@ -113,4 +113,35 @@ void main() {
     await tester.tapAt(centerOfM + const Offset(0, 18));
     expect(changed, 1); // M is at index 1
   });
+
+  testWidgets('normal variant: tap overlay spans the full 44px tap height',
+      (tester) async {
+    await tester.pumpWidget(wrap(SizedBox(
+        width: 300,
+        child: PPSegmentedControl(
+            segments: const ['A', 'B'], selectedIndex: 0, onChanged: (_) {}))));
+    final overlaySize =
+        tester.getSize(find.byKey(const Key('pp_segmented_overlay')));
+    expect(overlaySize.height, 44);
+  });
+
+  testWidgets(
+      'normal variant: tap 2px inside the top edge over a segment still fires onChanged',
+      (tester) async {
+    int? changed;
+    await tester.pumpWidget(wrap(SizedBox(
+        width: 300,
+        child: PPSegmentedControl(
+            segments: const ['Run', 'Ride', 'Gym'],
+            selectedIndex: 0,
+            onChanged: (i) => changed = i))));
+    final topLeft = tester.getTopLeft(find.byType(PPSegmentedControl));
+    final size = tester.getSize(find.byType(PPSegmentedControl));
+    // Rightmost third ('Gym', index 2), 2px below the control's top edge —
+    // inside the old 4px padding ring that used to swallow taps.
+    final tapPoint =
+        Offset(topLeft.dx + size.width * (5 / 6), topLeft.dy + 2);
+    await tester.tapAt(tapPoint);
+    expect(changed, 2);
+  });
 }
