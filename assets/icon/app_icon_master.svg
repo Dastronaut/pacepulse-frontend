@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PacePulse">
+  
+  <rect width="1024" height="1024" rx="228" fill="#25343F"></rect>
+
+  
+  <circle cx="512" cy="512" r="318" fill="none" stroke="#BFC9D1" stroke-opacity="0.16" stroke-width="84"></circle>
+
+  
+  <path d="M 588.93 203.44 A 318 318 0 1 1 435.07 203.44" fill="none" stroke="#FF9B51" stroke-width="84" stroke-linecap="round"></path>
+</svg>

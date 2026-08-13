@@ -1,0 +1,10 @@
+# Native launch screen — canvas dark (#16212B) in BOTH modes per the
+# dark-first brand; ring mark centered. The animated Flow 5 splash
+# (ring draw-in) is a separate in-app screen, not this.
+# Regenerate with: fvm dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#16212B"
+  image: "assets/icon/app_icon_foreground.png"
+  android_12:
+    color: "#16212B"
+    image: "assets/icon/app_icon_foreground.png"
