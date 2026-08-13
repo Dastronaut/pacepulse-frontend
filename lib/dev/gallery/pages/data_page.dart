@@ -1,0 +1,255 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/ui/ui.dart';
+import '../gallery.dart';
+
+class DataGalleryPage extends StatelessWidget {
+  const DataGalleryPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return ListView(
+      children: [
+        const GallerySection(
+          title: 'PPActivityRings',
+          child: PPActivityRings(
+            move: 0.8,
+            exercise: 0.5,
+            steps: 0.3,
+            child: Text('82%'),
+          ),
+        ),
+        GallerySection(
+          title: 'PPActivityRing (single)',
+          child: PPActivityRing(
+            value: 1,
+            size: 170,
+            thickness: 14,
+            color: colorScheme.primary,
+            child: const Text('2nd'),
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (display)',
+          child: PPMetricDisplay(
+            label: 'Distance',
+            value: '4.62',
+            unit: 'km',
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (mono)',
+          child: PPMetricDisplay(
+            label: 'Time',
+            value: '28:41',
+            face: PPMetricFace.mono,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (live)',
+          child: PPMetricDisplay(
+            label: 'Heart rate',
+            value: '152',
+            unit: 'bpm',
+            live: true,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPMetricDisplay (accent)',
+          child: PPMetricDisplay(
+            label: 'Elevation',
+            value: '1256',
+            unit: 'm',
+            accent: true,
+          ),
+        ),
+        GallerySection(
+          title: 'PPStatTile',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const PPStatTile(
+                icon: PPIcons.flame,
+                label: 'Calories',
+                value: '486',
+              ),
+              const SizedBox(width: 16),
+              const PPStatTile(
+                icon: PPIcons.route,
+                label: 'Distance',
+                value: '5.2',
+                unit: 'km',
+              ),
+            ],
+          ),
+        ),
+        const GallerySection(
+          title: 'PPWorkoutCard',
+          child: PPWorkoutCard(
+            icon: PPIcons.footprints,
+            title: 'Morning run',
+            meta: 'Today · 06:24',
+            stats: '5.21 km · 28:41 · 5:31 /km',
+            showPr: false,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPWorkoutCard (with PR)',
+          child: PPWorkoutCard(
+            icon: PPIcons.bike,
+            title: 'Evening ride',
+            meta: 'Yesterday · 19:10',
+            stats: '18.4 km · 54:20 · 2:56 /km',
+            showPr: true,
+          ),
+        ),
+        const GallerySection(
+          title: 'PPProgressBar (0.62)',
+          child: SizedBox(
+            width: 200,
+            child: PPProgressBar(
+              value: 0.62,
+              label: 'Distance',
+              valueLabel: '6.2 km',
+            ),
+          ),
+        ),
+        const GallerySection(
+          title: 'PPProgressBar (goal hit 1.0)',
+          child: SizedBox(
+            width: 200,
+            child: PPProgressBar(
+              value: 1.0,
+              label: 'Calories',
+              valueLabel: '500 kcal',
+              goalHit: true,
+            ),
+          ),
+        ),
+        const GallerySection(
+          title: 'PPChartCard',
+          child: PPChartCard(
+            title: 'Distance',
+            series: [
+              [4.1, 5.3, 4.8, 6.2, 5.9, 7.0, 6.4],
+              [3.0, 3.4, 3.9, 3.6, 4.2, 4.0, 4.6],
+            ],
+            periods: ['W', 'M', '6M', 'Y'],
+          ),
+        ),
+        const GallerySection(
+          title: 'PPElevationProfile',
+          child: PPElevationProfile(
+            elevations: [
+              120,
+              135,
+              128,
+              150,
+              170,
+              165,
+              190,
+              210,
+              195,
+              180,
+              160,
+            ],
+          ),
+        ),
+        GallerySection(
+          title: 'PPHRZoneBar',
+          child: SizedBox(
+            width: 200,
+            child: PPHRZoneBar(
+              fractions: [0.15, 0.20, 0.35, 0.25, 0.05],
+            ),
+          ),
+        ),
+        GallerySection(
+          title: 'PPHRZoneBar (active zone 4 with legend)',
+          child: SizedBox(
+            width: 200,
+            child: PPHRZoneBar(
+              fractions: [0.1, 0.2, 0.3, 0.3, 0.1],
+              activeZone: 4,
+              legendTimes: ['0:45', '2:15', '5:30', '8:00', '2:30'],
+            ),
+          ),
+        ),
+        const GallerySection(
+          title: 'Splits',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              PPSplitsHeader(),
+              PPSplitsRow(km: '1', pace: '5:42'),
+              PPSplitsRow(km: '2', pace: '5:31', deltaSeconds: -11, fastest: true),
+              PPSplitsRow(km: '3', pace: '5:50', deltaSeconds: 19),
+            ],
+          ),
+        ),
+        GallerySection(
+          title: 'PPAvatar / stack',
+          child: Column(
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const PPAvatar(initials: 'TL', size: PPAvatarSize.s48),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'MK', size: PPAvatarSize.s40),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'JT', size: PPAvatarSize.s32),
+                  const SizedBox(width: 16),
+                  const PPAvatar(initials: 'AL', size: PPAvatarSize.s24),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const PPAvatar(
+                initials: 'PR',
+                size: PPAvatarSize.s40,
+                premium: true,
+              ),
+              const SizedBox(height: 16),
+              const PPAvatarStack(
+                initials: ['MK', 'JT', 'AL'],
+                overflow: 3,
+              ),
+            ],
+          ),
+        ),
+        const GallerySection(
+          title: 'PPLeaderboardRow',
+          child: Column(
+            children: [
+              PPLeaderboardRow(
+                rank: 1,
+                name: 'Marta',
+                pace: '5:02',
+                progress: 0.78,
+                rankDelta: 1,
+              ),
+              SizedBox(height: 12),
+              PPLeaderboardRow(
+                rank: 2,
+                name: 'You',
+                pace: '5:08',
+                progress: 0.46,
+                isSelf: true,
+                selfDeltaLabel: '+0:04',
+              ),
+              SizedBox(height: 12),
+              PPLeaderboardRow(
+                rank: 5,
+                name: 'Rosa',
+                pace: '5:12',
+                progress: 0.2,
+                isDropped: true,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
