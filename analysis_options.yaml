@@ -1,0 +1,7 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Design handoff bundles — pristine reference material, not project code.
+    # (Contains the pre-revision Dart theme that predates the Inter switch.)
+    - handoff/**
