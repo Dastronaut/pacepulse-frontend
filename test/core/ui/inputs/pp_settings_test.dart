@@ -69,8 +69,10 @@ void main() {
       PPSettingsRow.plain(icon: PPIcons.user, title: 'Profile', onTap: () {}),
       PPSettingsRow.plain(icon: PPIcons.bell, title: 'Alerts', onTap: () {}),
     ])));
+    // Divider keys are per-index (pp_settings_divider_$i); the divider
+    // between children 0 and 1 carries index 1.
     final divider = tester.widget<Padding>(
-        find.byKey(const Key('pp_settings_divider')));
+        find.byKey(const Key('pp_settings_divider_1')));
     expect(divider.padding, const EdgeInsets.only(left: 54));
   });
 

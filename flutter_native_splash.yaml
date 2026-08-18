@@ -1,0 +1,14 @@
+# Native launch screen — follows system theme per ruling 2026-08-14:
+# Mist light (#EAEFEF) / canvas dark (#16212B); ring mark centered.
+# The animated Flow 5 splash (ring draw-in) is a separate in-app screen, not this.
+# Regenerate with: fvm dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#EAEFEF"
+  color_dark: "#16212B"
+  image: "assets/icon/app_icon_foreground.png"
+  image_dark: "assets/icon/app_icon_foreground.png"
+  android_12:
+    color: "#EAEFEF"
+    color_dark: "#16212B"
+    image: "assets/icon/app_icon_foreground.png"
+    image_dark: "assets/icon/app_icon_foreground.png"

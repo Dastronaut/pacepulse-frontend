@@ -35,12 +35,13 @@ class PPSettingsGroup extends StatelessWidget {
               for (var i = 0; i < children.length; i++) ...[
                 if (i > 0)
                   Padding(
-                    key: const Key('pp_settings_divider'),
+                    key: Key('pp_settings_divider_$i'),
                     padding: const EdgeInsets.only(left: 54),
                     child: Divider(
-                        height: PPBorders.hairline,
-                        thickness: PPBorders.hairline,
-                        color: theme.colorScheme.outlineVariant),
+                      height: PPBorders.hairline,
+                      thickness: PPBorders.hairline,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
                   ),
                 children[i],
               ],
@@ -61,13 +62,13 @@ class PPSettingsRow extends StatelessWidget {
     required this.title,
     required bool value,
     required ValueChanged<bool> onChanged,
-  })  : _kind = _RowKind.toggle,
-        // ignore: prefer_initializing_formals
-        _value = value,
-        // ignore: prefer_initializing_formals
-        _onChanged = onChanged,
-        valueLabel = null,
-        onTap = null;
+  }) : _kind = _RowKind.toggle,
+       // ignore: prefer_initializing_formals
+       _value = value,
+       // ignore: prefer_initializing_formals
+       _onChanged = onChanged,
+       valueLabel = null,
+       onTap = null;
 
   const PPSettingsRow.value({
     super.key,
@@ -75,20 +76,20 @@ class PPSettingsRow extends StatelessWidget {
     required this.title,
     String? value,
     this.onTap,
-  })  : _kind = _RowKind.value,
-        _value = false,
-        _onChanged = null,
-        valueLabel = value;
+  }) : _kind = _RowKind.value,
+       _value = false,
+       _onChanged = null,
+       valueLabel = value;
 
   const PPSettingsRow.plain({
     super.key,
     required this.icon,
     required this.title,
     this.onTap,
-  })  : _kind = _RowKind.plain,
-        _value = false,
-        _onChanged = null,
-        valueLabel = null;
+  }) : _kind = _RowKind.plain,
+       _value = false,
+       _onChanged = null,
+       valueLabel = null;
 
   final IconData icon;
   final String title;
@@ -112,21 +113,32 @@ class PPSettingsRow extends StatelessWidget {
           children: [
             PPIcon(icon, color: scheme.onSurfaceVariant),
             const SizedBox(width: 14),
-            Expanded(
-                child: Text(title, style: theme.textTheme.bodyMedium)),
+            Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
             switch (_kind) {
               _RowKind.toggle => _PPToggle(value: _value),
-              _RowKind.value => Row(mainAxisSize: MainAxisSize.min, children: [
+              _RowKind.value => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   if (valueLabel != null)
-                    Text(valueLabel!,
-                        style: theme.textTheme.bodySmall!
-                            .copyWith(color: pp.onSurfaceFaint)),
+                    Text(
+                      valueLabel!,
+                      style: theme.textTheme.bodySmall!.copyWith(
+                        color: pp.onSurfaceFaint,
+                      ),
+                    ),
                   const SizedBox(width: PPSpacing.s2),
-                  PPIcon(PPIcons.chevronRight,
-                      size: PPIconSize.s20, color: pp.onSurfaceFaint),
-                ]),
-              _RowKind.plain => PPIcon(PPIcons.chevronRight,
-                  size: PPIconSize.s20, color: pp.onSurfaceFaint),
+                  PPIcon(
+                    PPIcons.chevronRight,
+                    size: PPIconSize.s20,
+                    color: pp.onSurfaceFaint,
+                  ),
+                ],
+              ),
+              _RowKind.plain => PPIcon(
+                PPIcons.chevronRight,
+                size: PPIconSize.s20,
+                color: pp.onSurfaceFaint,
+              ),
             },
           ],
         ),
@@ -139,14 +151,14 @@ class PPSettingsRow extends StatelessWidget {
     if (action == null) return row;
 
     final pressable = PPPressable(
-        onPressed: action, semanticLabel: title, child: row);
+      onPressed: action,
+      semanticLabel: title,
+      child: row,
+    );
 
     // Wrap toggle with Semantics to announce switch state to screen readers
     if (_kind == _RowKind.toggle) {
-      return Semantics(
-        toggled: _value,
-        child: pressable,
-      );
+      return Semantics(toggled: _value, child: pressable);
     }
     return pressable;
   }
