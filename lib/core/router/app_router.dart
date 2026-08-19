@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/auth_landing_placeholder.dart';
 import '../../features/home/presentation/home_placeholder.dart';
+import '../../features/onboarding/presentation/onboarding_carousel_screen.dart';
 import '../../features/onboarding/presentation/splash_screen.dart';
 
 /// App navigation skeleton — every flow registers its routes here.
@@ -13,6 +14,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: SplashScreen.path,
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: OnboardingCarouselScreen.path,
+        builder: (context, state) => const OnboardingCarouselScreen(),
       ),
       GoRoute(
         path: AuthLandingPlaceholder.path,

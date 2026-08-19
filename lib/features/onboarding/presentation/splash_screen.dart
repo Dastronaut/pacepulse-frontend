@@ -10,6 +10,8 @@ import '../../../core/ui/ui.dart';
 import '../../auth/data/session.dart';
 import '../../auth/presentation/auth_landing_placeholder.dart';
 import '../../home/presentation/home_placeholder.dart';
+import '../data/onboarding_seen.dart';
+import 'onboarding_carousel_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -24,10 +26,14 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _drawIn =
-      AnimationController(vsync: this, duration: PPMotion.deliberate);
-  late final Animation<double> _ringValue =
-      CurvedAnimation(parent: _drawIn, curve: PPMotion.energetic);
+  late final AnimationController _drawIn = AnimationController(
+    vsync: this,
+    duration: PPMotion.deliberate,
+  );
+  late final Animation<double> _ringValue = CurvedAnimation(
+    parent: _drawIn,
+    curve: PPMotion.energetic,
+  );
   Timer? _cap;
   bool _navigated = false;
 
@@ -39,7 +45,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   Future<void> _start() async {
     if (!mounted) return;
-    _cap = Timer(SplashScreen.maxDuration, () => _go(hasSession: false));
+    _cap = Timer(
+      SplashScreen.maxDuration,
+      () => _go(AuthLandingPlaceholder.path),
+    );
     if (ppReducedMotion(context)) {
       _drawIn.value = 1;
     } else {
@@ -48,15 +57,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final hasSession = await ref
         .read(sessionProvider.future)
         .catchError((_) => false);
-    _go(hasSession: hasSession);
+    if (!mounted) return;
+    if (hasSession) {
+      _go(HomePlaceholder.path);
+      return;
+    }
+    // Unknown flag falls open to showing the carousel.
+    final seen = await ref
+        .read(onboardingSeenProvider.future)
+        .catchError((_) => false);
+    if (!mounted) return;
+    _go(seen ? AuthLandingPlaceholder.path : OnboardingCarouselScreen.path);
   }
 
-  void _go({required bool hasSession}) {
+  void _go(String path) {
     if (_navigated || !mounted) return;
     _navigated = true;
     _cap?.cancel();
-    context
-        .go(hasSession ? HomePlaceholder.path : AuthLandingPlaceholder.path);
+    context.go(path);
   }
 
   @override
@@ -88,14 +106,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             const SizedBox(height: PPSpacing.s6),
             Text(
               'PacePulse',
-              style: theme.textTheme.headlineLarge
-                  ?.copyWith(fontWeight: FontWeight.w800),
+              style: theme.textTheme.headlineLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
             ),
             const Spacer(),
             Text(
               PPAppInfo.versionLabel,
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: pp.onSurfaceFaint),
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: pp.onSurfaceFaint,
+              ),
             ),
             const SizedBox(height: PPSpacing.s11),
           ],
