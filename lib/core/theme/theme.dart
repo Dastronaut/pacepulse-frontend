@@ -15,7 +15,7 @@ export 'app_typography.dart';
 ///   MaterialApp(
 ///     theme: ppLightTheme(),
 ///     darkTheme: ppDarkTheme(),
-///     themeMode: ThemeMode.dark, // dark is the brand default
+///     themeMode: ThemeMode.system,
 ///   )
 ///
 /// Custom tokens: `Theme.of(context).extension<PPColors>()!`

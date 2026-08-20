@@ -11,7 +11,13 @@ import 'package:pacepulse/features/onboarding/presentation/widgets/onboarding_pa
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Own harness so reduced motion and text scale can be injected.
-Widget harness({bool reducedMotion = false, double textScale = 1.0}) {
+Widget harness({
+  bool reducedMotion = false,
+  double textScale = 1.0,
+  // Untyped on purpose: `Override` is not exported from flutter_riverpod's
+  // public API, so typing this would mean importing riverpod's `src/`.
+  List overrides = const [],
+}) {
   final router = GoRouter(
     initialLocation: OnboardingCarouselScreen.path,
     routes: [
@@ -26,6 +32,7 @@ Widget harness({bool reducedMotion = false, double textScale = 1.0}) {
     ],
   );
   return ProviderScope(
+    overrides: overrides.cast(),
     child: MaterialApp.router(
       theme: ppLightTheme(),
       darkTheme: ppDarkTheme(),
@@ -46,6 +53,18 @@ Future<bool> seenFlag() async =>
     (await SharedPreferences.getInstance())
         .getBool(OnboardingSeenStore.key) ??
     false;
+
+class _CountingSeenStore extends OnboardingSeenStore {
+  _CountingSeenStore() : super(SharedPreferences.getInstance());
+
+  int markSeenCalls = 0;
+
+  @override
+  Future<void> markSeen() async {
+    markSeenCalls++;
+    return super.markSeen();
+  }
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -148,5 +167,23 @@ void main() {
     await tester.pump();
     expect(tester.takeException(), isNull);
     expect(find.byType(SingleChildScrollView), findsWidgets);
+  });
+
+  testWidgets('double-tapping Skip marks seen exactly once', (tester) async {
+    final store = _CountingSeenStore();
+    await tester.pumpWidget(harness(
+      overrides: [onboardingSeenStoreProvider.overrideWithValue(store)],
+    ));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 220));
+
+    // Two taps inside one frame — the second must be swallowed.
+    await tester.tap(find.text('Skip'), warnIfMissed: false);
+    await tester.tap(find.text('Skip'), warnIfMissed: false);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 220));
+
+    expect(store.markSeenCalls, 1);
+    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
   });
 }

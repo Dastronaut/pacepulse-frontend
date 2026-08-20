@@ -9,10 +9,12 @@ import 'package:pacepulse/features/onboarding/presentation/widgets/onboarding_sp
 Widget host(Widget child, {bool reducedMotion = false, ThemeData? theme}) =>
     MaterialApp(
       theme: theme ?? ppDarkTheme(),
-      home: Scaffold(
-        body: MediaQuery(
-          data: MediaQueryData(disableAnimations: reducedMotion),
-          child: Center(child: child),
+      home: Builder(
+        builder: (context) => Scaffold(
+          body: MediaQuery(
+            data: MediaQuery.of(context).copyWith(disableAnimations: reducedMotion),
+            child: Center(child: child),
+          ),
         ),
       ),
     );

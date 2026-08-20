@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pacepulse/dev/gallery/gallery.dart';
 import 'package:pacepulse/features/auth/presentation/auth_landing_placeholder.dart';
 import 'package:pacepulse/features/home/presentation/home_placeholder.dart';
 import 'package:pacepulse/features/onboarding/data/onboarding_seen.dart';
@@ -70,5 +71,17 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(find.byType(OnboardingCarouselScreen), findsOneWidget);
+  });
+
+  testWidgets('the debug gallery is reachable through the router',
+      (tester) async {
+    await tester.pumpWidget(ProviderScope(
+      overrides: [onboardingSeenProvider.overrideWith((ref) async => true)],
+      child: const PacePulseApp(),
+    ));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Open component gallery'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GalleryScreen), findsOneWidget);
   });
 }

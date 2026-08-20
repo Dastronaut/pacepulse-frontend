@@ -26,6 +26,8 @@ final Map<String, WidgetBuilder> galleryPages = {
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
 
+  static const path = '/gallery';
+
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
 }

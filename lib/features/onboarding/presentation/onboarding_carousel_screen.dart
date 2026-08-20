@@ -11,7 +11,14 @@ import '../data/onboarding_seen.dart';
 import 'onboarding_slides.dart';
 import 'widgets/onboarding_page_dots.dart';
 
+// Flow 5 S2 layout literals with no token (ruling 2026-08-17, convention
+// per pp_button.dart:9-12): 28px specimen↔text gap; 28px screen bottom
+// padding — the same value today but a different role, kept separate so
+// design can move one without the other; 10px headline↔body gap; 300px
+// body max width. The 28px bottom padding recurs across S2–S9 and is
+// raised as a PPSpacing token candidate.
 const _slideGap = 28.0;
+const _screenBottomPad = 28.0;
 const _textGap = 10.0;
 const _bodyMaxWidth = 300.0;
 
@@ -29,6 +36,11 @@ class _OnboardingCarouselScreenState
     extends ConsumerState<OnboardingCarouselScreen> {
   final _controller = PageController();
   int _index = 0;
+
+  /// Skip and Get started are the same exit, and both are 44px+ targets a
+  /// fast double-tap can hit twice. Without this, the second tap fires a
+  /// second write and a second `context.go`.
+  bool _finishing = false;
 
   bool get _isLast => _index == onboardingSlides.length - 1;
 
@@ -56,6 +68,8 @@ class _OnboardingCarouselScreenState
   }
 
   void _finish() {
+    if (_finishing) return;
+    _finishing = true;
     ref.read(onboardingSeenStoreProvider).markSeen().ignore();
     ref.invalidate(onboardingSeenProvider);
     context.go(AuthLandingPlaceholder.path);
@@ -93,7 +107,7 @@ class _OnboardingCarouselScreenState
               padding: const EdgeInsets.only(
                 left: PPSpacing.s5,
                 right: PPSpacing.s5,
-                bottom: _slideGap,
+                bottom: _screenBottomPad,
               ),
               child: PPButton(
                 label: _isLast ? 'Get started' : 'Next',

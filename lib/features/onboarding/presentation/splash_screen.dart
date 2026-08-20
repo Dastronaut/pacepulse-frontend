@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import '../../auth/data/session.dart';
 import '../../auth/presentation/auth_landing_placeholder.dart';
 import '../../home/presentation/home_placeholder.dart';
 import '../data/onboarding_seen.dart';
+import '../domain/splash_destination.dart';
 import 'onboarding_carousel_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -54,21 +56,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     } else {
       await _drawIn.forward();
     }
-    final hasSession = await ref
-        .read(sessionProvider.future)
-        .catchError((_) => false);
     if (!mounted) return;
-    if (hasSession) {
-      _go(HomePlaceholder.path);
-      return;
-    }
-    // Unknown flag falls open to showing the carousel.
-    final seen = await ref
-        .read(onboardingSeenProvider.future)
-        .catchError((_) => false);
-    if (!mounted) return;
-    _go(seen ? AuthLandingPlaceholder.path : OnboardingCarouselScreen.path);
+    final (hasSession, seen) = await (
+      _falseOnError(ref.read(sessionProvider.future), 'session'),
+      _falseOnError(ref.read(onboardingSeenProvider.future), 'onboarding-seen'),
+    ).wait;
+    _go(_pathFor(resolveSplashDestination(hasSession: hasSession, seen: seen)));
   }
+
+  Future<bool> _falseOnError(Future<bool> read, String label) async {
+    try {
+      return await read;
+    } on Exception catch (error) {
+      if (kDebugMode) {
+        debugPrint('splash: $label read failed, falling open to false: $error');
+      }
+      return false;
+    }
+  }
+
+  String _pathFor(SplashDestination destination) => switch (destination) {
+    SplashDestination.home => HomePlaceholder.path,
+    SplashDestination.auth => AuthLandingPlaceholder.path,
+    SplashDestination.carousel => OnboardingCarouselScreen.path,
+  };
 
   void _go(String path) {
     if (_navigated || !mounted) return;

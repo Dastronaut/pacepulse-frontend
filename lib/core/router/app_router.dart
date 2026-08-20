@@ -1,12 +1,12 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../dev/gallery/gallery.dart';
 import '../../features/auth/presentation/auth_landing_placeholder.dart';
 import '../../features/home/presentation/home_placeholder.dart';
 import '../../features/onboarding/presentation/onboarding_carousel_screen.dart';
 import '../../features/onboarding/presentation/splash_screen.dart';
-
-/// App navigation skeleton — every flow registers its routes here.
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: SplashScreen.path,
@@ -27,6 +27,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: HomePlaceholder.path,
         builder: (context, state) => const HomePlaceholder(),
       ),
+      if (kDebugMode)
+        GoRoute(
+          path: GalleryScreen.path,
+          builder: (context, state) => const GalleryScreen(),
+        ),
     ],
   );
 });

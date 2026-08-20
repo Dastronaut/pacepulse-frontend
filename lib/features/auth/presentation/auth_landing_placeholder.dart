@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../dev/gallery/gallery.dart';
@@ -29,11 +30,7 @@ class AuthLandingPlaceholder extends StatelessWidget {
             if (kDebugMode) ...[
               const SizedBox(height: PPSpacing.s6),
               TextButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const GalleryScreen(),
-                  ),
-                ),
+                onPressed: () => context.push(GalleryScreen.path),
                 child: const Text('Open component gallery'),
               ),
             ],
