@@ -71,11 +71,47 @@ abstract final class PPIcons {
   static const triangleAlert = LucideIcons.triangleAlert;
   static const heart = LucideIcons.heart;
 
+  static const eye = LucideIcons.eye;
+  static const eyeOff = LucideIcons.eyeOff;
+
   static const List<IconData> all = [
-    house, clock, zap, user, chevronLeft, chevronRight, x, share2,
-    slidersHorizontal, list, calendarDays, ellipsis, footprints, bike,
-    dumbbell, heartPulse, flame, route, mountain, timer, gauge, chartLine,
-    trophy, mapPin, play, pause, square, plus, minus, check, bluetooth,
-    bell, crown, wifiOff, triangleAlert, heart,
+    house,
+    clock,
+    zap,
+    user,
+    chevronLeft,
+    chevronRight,
+    x,
+    share2,
+    slidersHorizontal,
+    list,
+    calendarDays,
+    ellipsis,
+    footprints,
+    bike,
+    dumbbell,
+    heartPulse,
+    flame,
+    route,
+    mountain,
+    timer,
+    gauge,
+    chartLine,
+    trophy,
+    mapPin,
+    play,
+    pause,
+    square,
+    plus,
+    minus,
+    check,
+    bluetooth,
+    bell,
+    crown,
+    wifiOff,
+    triangleAlert,
+    heart,
+    eye,
+    eyeOff,
   ];
 }

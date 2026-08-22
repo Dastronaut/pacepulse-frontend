@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dev/gallery/gallery.dart';
-import '../../features/auth/presentation/auth_landing_placeholder.dart';
+import '../../features/auth/presentation/auth_landing_screen.dart';
+import '../../features/auth/presentation/reset_password_screen.dart';
+import '../../features/auth/presentation/sign_in_screen.dart';
+import '../../features/auth/presentation/sign_up_screen.dart';
 import '../../features/home/presentation/home_placeholder.dart';
 import '../../features/onboarding/presentation/onboarding_carousel_screen.dart';
 import '../../features/onboarding/presentation/splash_screen.dart';
+
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: SplashScreen.path,
@@ -20,8 +24,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingCarouselScreen(),
       ),
       GoRoute(
-        path: AuthLandingPlaceholder.path,
-        builder: (context, state) => const AuthLandingPlaceholder(),
+        path: AuthLandingScreen.path,
+        builder: (context, state) => const AuthLandingScreen(),
+        routes: [
+          GoRoute(
+            path: 'sign-up',
+            builder: (context, state) => const SignUpScreen(),
+          ),
+          GoRoute(
+            path: 'sign-in',
+            builder: (context, state) => const SignInScreen(),
+          ),
+          GoRoute(
+            path: 'reset-password',
+            builder: (context, state) => const ResetPasswordScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: HomePlaceholder.path,

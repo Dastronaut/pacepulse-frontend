@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
-import '../../auth/presentation/auth_landing_placeholder.dart';
+import '../../auth/presentation/auth_landing_screen.dart';
 import '../data/onboarding_seen.dart';
 import 'onboarding_slides.dart';
 import 'widgets/onboarding_page_dots.dart';
@@ -72,7 +72,7 @@ class _OnboardingCarouselScreenState
     _finishing = true;
     ref.read(onboardingSeenStoreProvider).markSeen().ignore();
     ref.invalidate(onboardingSeenProvider);
-    context.go(AuthLandingPlaceholder.path);
+    context.go(AuthLandingScreen.path);
   }
 
   @override

@@ -20,6 +20,12 @@ class PPTextField extends StatefulWidget {
     this.obscureText = false,
     this.keyboardType,
     this.onChanged,
+    this.helperText,
+    this.trailing,
+    this.textInputAction,
+    this.onSubmitted,
+    this.focusNode,
+    this.autofillHints,
   });
 
   final String label;
@@ -31,22 +37,44 @@ class PPTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
 
+  final String? helperText;
+
+  final Widget? trailing;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+
+  final FocusNode? focusNode;
+  final Iterable<String>? autofillHints;
+
   @override
   State<PPTextField> createState() => _PPTextFieldState();
 }
 
 class _PPTextFieldState extends State<PPTextField> {
-  final FocusNode _focus = FocusNode();
+  FocusNode? _ownedFocus;
+  FocusNode get _focus => widget.focusNode ?? (_ownedFocus ??= FocusNode());
 
   @override
   void initState() {
     super.initState();
-    _focus.addListener(() => setState(() {}));
+    _focus.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() => setState(() {});
+
+  @override
+  void didUpdateWidget(PPTextField old) {
+    super.didUpdateWidget(old);
+    if (old.focusNode != widget.focusNode) {
+      (old.focusNode ?? _ownedFocus)?.removeListener(_onFocusChange);
+      _focus.addListener(_onFocusChange);
+    }
   }
 
   @override
   void dispose() {
-    _focus.dispose();
+    _focus.removeListener(_onFocusChange);
+    _ownedFocus?.dispose();
     super.dispose();
   }
 
@@ -112,36 +140,55 @@ class _PPTextFieldState extends State<PPTextField> {
               borderRadius: BorderRadius.circular(PPRadius.sm),
               border: border,
             ),
-            child: Center(
-              child: TextField(
-                controller: widget.controller,
-                focusNode: _focus,
-                enabled: widget.enabled,
-                obscureText: widget.obscureText,
-                keyboardType: widget.keyboardType,
-                onChanged: widget.onChanged,
-                cursorColor: pp.accentText,
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color: widget.enabled
-                      ? scheme.onSurface
-                      : pp.onSurfaceDisabled,
-                ),
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  border: InputBorder.none,
-                  hintText: widget.hint,
-                  hintStyle: theme.textTheme.bodyMedium!.copyWith(
-                    color: pp.onSurfaceFaint,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: TextField(
+                      controller: widget.controller,
+                      focusNode: _focus,
+                      enabled: widget.enabled,
+                      obscureText: widget.obscureText,
+                      keyboardType: widget.keyboardType,
+                      textInputAction: widget.textInputAction,
+                      onSubmitted: widget.onSubmitted,
+                      autofillHints: widget.autofillHints,
+                      onChanged: widget.onChanged,
+                      cursorColor: pp.accentText,
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        color: widget.enabled
+                            ? scheme.onSurface
+                            : pp.onSurfaceDisabled,
+                      ),
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        filled: false,
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        hintText: widget.hint,
+                        hintStyle: theme.textTheme.bodyMedium!.copyWith(
+                          color: pp.onSurfaceFaint,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                if (widget.trailing != null) widget.trailing!,
+              ],
             ),
           ),
-          if (hasError) ...[
+          if (hasError || widget.helperText != null) ...[
             const SizedBox(height: PPSpacing.s2),
             Text(
-              widget.errorText!,
-              style: theme.textTheme.labelMedium!.copyWith(color: scheme.error),
+              hasError ? widget.errorText! : widget.helperText!,
+              style: theme.textTheme.labelMedium!.copyWith(
+                color: hasError ? scheme.error : pp.onSurfaceFaint,
+              ),
             ),
           ],
         ],

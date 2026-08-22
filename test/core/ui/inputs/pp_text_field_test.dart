@@ -96,4 +96,128 @@ void main() {
     final semantics = tester.getSemantics(find.byType(PPTextField));
     expect(semantics.label, contains('Enter a valid email address'));
   });
+
+  testWidgets('helper text renders in faint color and error replaces it',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: const Scaffold(
+        body: PPTextField(
+          label: 'Password',
+          helperText: '8+ characters with at least 1 number',
+        ),
+      ),
+    ));
+    expect(find.text('8+ characters with at least 1 number'), findsOneWidget);
+
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: const Scaffold(
+        body: PPTextField(
+          label: 'Password',
+          helperText: '8+ characters with at least 1 number',
+          errorText: 'Wrong password — try again or reset it',
+        ),
+      ),
+    ));
+    expect(find.text('8+ characters with at least 1 number'), findsNothing);
+    expect(find.text('Wrong password — try again or reset it'), findsOneWidget);
+  });
+
+  testWidgets('trailing widget renders inside the field box', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: Scaffold(
+        body: PPTextField(
+          label: 'Password',
+          trailing: IconButton(
+            key: const Key('t'),
+            onPressed: () {},
+            icon: const Icon(Icons.abc),
+          ),
+        ),
+      ),
+    ));
+    final box = tester.getRect(find.byKey(const Key('pp_field_box')));
+    final trailing = tester.getRect(find.byKey(const Key('t')));
+    expect(box.contains(trailing.center), isTrue);
+  });
+
+  testWidgets('external focus node is not disposed by the field',
+      (tester) async {
+    final node = FocusNode();
+    addTearDown(node.dispose);
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: Scaffold(body: PPTextField(label: 'Email', focusNode: node)),
+    ));
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    // Would throw "A FocusNode was used after being disposed" if the field
+    // had disposed a node it did not create.
+    expect(node.hasFocus, isFalse);
+  });
+
+  testWidgets('passes textInputAction and onSubmitted through',
+      (tester) async {
+    String? submitted;
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: Scaffold(
+        body: PPTextField(
+          label: 'Email',
+          textInputAction: TextInputAction.next,
+          onSubmitted: (v) => submitted = v,
+        ),
+      ),
+    ));
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.textInputAction, TextInputAction.next);
+    await tester.enterText(find.byType(TextField), 'a@b.c');
+    await tester.testTextInput.receiveAction(TextInputAction.next);
+    expect(submitted, 'a@b.c');
+  });
+
+  testWidgets('inner Material field contributes no decoration of its own',
+      (tester) async {
+    // PPTextField draws its own box, so any decoration on the inner Material
+    // field paints a second, inset box inside it — the double border seen on
+    // device before 2026-08-20, caused by an ambient `inputDecorationTheme`.
+    // That theme entry is gone, but this asserts the widget is neutral on its
+    // own: a parent `Theme` override, or a future app-level decoration theme,
+    // must not be able to reach through. Guards against a well-meaning
+    // "these are redundant now" cleanup.
+    await tester.pumpWidget(MaterialApp(
+      theme: ppLightTheme(),
+      home: const Scaffold(body: PPTextField(label: 'Email')),
+    ));
+
+    final dec = tester
+        .widget<InputDecorator>(find.byType(InputDecorator))
+        .decoration;
+    expect(dec.filled, isFalse);
+    expect(dec.contentPadding, EdgeInsets.zero);
+    for (final border in <InputBorder?>[
+      dec.border,
+      dec.enabledBorder,
+      dec.focusedBorder,
+      dec.errorBorder,
+      dec.focusedErrorBorder,
+      dec.disabledBorder,
+    ]) {
+      expect(border, InputBorder.none);
+    }
+  });
+
+  testWidgets('text sits at the documented constant-16 inset', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: ppLightTheme(),
+      home: const Scaffold(
+        body: PPTextField(label: 'Email', hint: 'dana@pacepulse.app'),
+      ),
+    ));
+    final box = tester.getRect(find.byKey(const Key('pp_field_box')));
+    final hint = tester.getRect(find.text('dana@pacepulse.app'));
+    // Unfixed, the inherited 16px contentPadding pushed this to 32.
+    expect(hint.left - box.left, 16.0);
+  });
 }

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pacepulse/core/theme/theme.dart';
-import 'package:pacepulse/features/auth/presentation/auth_landing_placeholder.dart';
+import 'package:pacepulse/features/auth/presentation/auth_landing_screen.dart';
 import 'package:pacepulse/features/onboarding/data/onboarding_seen.dart';
 import 'package:pacepulse/features/onboarding/presentation/onboarding_carousel_screen.dart';
 import 'package:pacepulse/features/onboarding/presentation/onboarding_slides.dart';
@@ -26,8 +26,8 @@ Widget harness({
         builder: (context, state) => const OnboardingCarouselScreen(),
       ),
       GoRoute(
-        path: AuthLandingPlaceholder.path,
-        builder: (context, state) => const AuthLandingPlaceholder(),
+        path: AuthLandingScreen.path,
+        builder: (context, state) => const AuthLandingScreen(),
       ),
     ],
   );
@@ -110,7 +110,7 @@ void main() {
     await tester.tap(find.text('Get started'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
+    expect(find.byType(AuthLandingScreen), findsOneWidget);
     expect(await seenFlag(), isTrue);
   });
 
@@ -142,7 +142,7 @@ void main() {
     await tester.tap(find.text('Skip'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
+    expect(find.byType(AuthLandingScreen), findsOneWidget);
     expect(await seenFlag(), isTrue);
   });
 
@@ -184,6 +184,6 @@ void main() {
     await tester.pump(const Duration(milliseconds: 220));
 
     expect(store.markSeenCalls, 1);
-    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
+    expect(find.byType(AuthLandingScreen), findsOneWidget);
   });
 }

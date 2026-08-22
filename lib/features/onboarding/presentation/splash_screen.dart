@@ -9,7 +9,7 @@ import '../../../core/config/app_info.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
 import '../../auth/data/session.dart';
-import '../../auth/presentation/auth_landing_placeholder.dart';
+import '../../auth/presentation/auth_landing_screen.dart';
 import '../../home/presentation/home_placeholder.dart';
 import '../data/onboarding_seen.dart';
 import '../domain/splash_destination.dart';
@@ -49,7 +49,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     _cap = Timer(
       SplashScreen.maxDuration,
-      () => _go(AuthLandingPlaceholder.path),
+      () => _go(AuthLandingScreen.path),
     );
     if (ppReducedMotion(context)) {
       _drawIn.value = 1;
@@ -77,7 +77,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   String _pathFor(SplashDestination destination) => switch (destination) {
     SplashDestination.home => HomePlaceholder.path,
-    SplashDestination.auth => AuthLandingPlaceholder.path,
+    SplashDestination.auth => AuthLandingScreen.path,
     SplashDestination.carousel => OnboardingCarouselScreen.path,
   };
 

@@ -8,7 +8,7 @@ import 'package:pacepulse/core/config/app_info.dart';
 import 'package:pacepulse/core/theme/theme.dart';
 import 'package:pacepulse/core/ui/ui.dart';
 import 'package:pacepulse/features/auth/data/session.dart';
-import 'package:pacepulse/features/auth/presentation/auth_landing_placeholder.dart';
+import 'package:pacepulse/features/auth/presentation/auth_landing_screen.dart';
 import 'package:pacepulse/features/home/presentation/home_placeholder.dart';
 import 'package:pacepulse/features/onboarding/data/onboarding_seen.dart';
 import 'package:pacepulse/features/onboarding/presentation/onboarding_carousel_screen.dart';
@@ -27,8 +27,8 @@ Widget harness({bool reducedMotion = false, List overrides = const []}) {
           path: SplashScreen.path,
           builder: (context, state) => const SplashScreen()),
       GoRoute(
-          path: AuthLandingPlaceholder.path,
-          builder: (context, state) => const AuthLandingPlaceholder()),
+          path: AuthLandingScreen.path,
+          builder: (context, state) => const AuthLandingScreen()),
       GoRoute(
           path: HomePlaceholder.path,
           builder: (context, state) => const HomePlaceholder()),
@@ -92,10 +92,10 @@ void main() {
       overrides: [sessionProvider.overrideWith((ref) => never.future)],
     ));
     await tester.pump(const Duration(milliseconds: 1400));
-    expect(find.byType(AuthLandingPlaceholder), findsNothing);
+    expect(find.byType(AuthLandingScreen), findsNothing);
     await tester.pump(const Duration(milliseconds: 200));
     await tester.pumpAndSettle();
-    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
+    expect(find.byType(AuthLandingScreen), findsOneWidget);
     // Guard: the widget is disposed by the cap navigation above. When the
     // still-pending session future finally resolves, _start()'s post-await
     // ref.read must not run on the disposed ConsumerState.
@@ -110,7 +110,7 @@ void main() {
       overrides: [onboardingSeenProvider.overrideWith((ref) async => true)],
     ));
     await tester.pumpAndSettle();
-    expect(find.byType(AuthLandingPlaceholder), findsOneWidget);
+    expect(find.byType(AuthLandingScreen), findsOneWidget);
     expect(find.byType(OnboardingCarouselScreen), findsNothing);
   });
 
@@ -150,7 +150,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pump(const Duration(milliseconds: 50));
     expect(find.byType(OnboardingCarouselScreen), findsOneWidget);
-    expect(find.byType(AuthLandingPlaceholder), findsNothing);
+    expect(find.byType(AuthLandingScreen), findsNothing);
   });
 
   testWidgets(
@@ -191,11 +191,11 @@ void main() {
       carouselAfterReads =
           find.byType(OnboardingCarouselScreen).evaluate().isNotEmpty;
       authBeforeCap =
-          find.byType(AuthLandingPlaceholder).evaluate().isNotEmpty;
+          find.byType(AuthLandingScreen).evaluate().isNotEmpty;
       // Only the 1.5s cap can move the app off the splash screen now.
       await tester.pump(const Duration(milliseconds: 750));
       authAfterFirstCheckpoint =
-          find.byType(AuthLandingPlaceholder).evaluate().isNotEmpty;
+          find.byType(AuthLandingScreen).evaluate().isNotEmpty;
       await tester.pump(const Duration(milliseconds: 200));
       // Bare pumpAndSettle would hang if this ever mis-routed to the
       // carousel instead (PPLivePulse loops); settle the route transition
@@ -203,7 +203,7 @@ void main() {
       for (var i = 0; i < 5; i++) {
         await tester.pump(const Duration(milliseconds: 100));
       }
-      authAfterCap = find.byType(AuthLandingPlaceholder).evaluate().isNotEmpty;
+      authAfterCap = find.byType(AuthLandingScreen).evaluate().isNotEmpty;
     }, (error, stack) => escaped.add(error));
     expect(carouselAfterReads, isFalse);
     expect(authBeforeCap, isFalse);
