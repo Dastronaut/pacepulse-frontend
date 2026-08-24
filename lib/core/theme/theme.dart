@@ -15,7 +15,7 @@ export 'app_typography.dart';
 ///   MaterialApp(
 ///     theme: ppLightTheme(),
 ///     darkTheme: ppDarkTheme(),
-///     themeMode: ThemeMode.dark, // dark is the brand default
+///     themeMode: ThemeMode.system,
 ///   )
 ///
 /// Custom tokens: `Theme.of(context).extension<PPColors>()!`
@@ -94,31 +94,6 @@ ThemeData _buildTheme(ColorScheme scheme, PPColors pp) {
       ),
     ),
 
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: scheme.surfaceContainer,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: PPSpacing.s4,
-        vertical: PPSpacing.s4,
-      ),
-      border: OutlineInputBorder(
-        borderRadius: PPRadius.inputRadius,
-        borderSide: BorderSide(color: scheme.outline),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: PPRadius.inputRadius,
-        borderSide: BorderSide(color: scheme.outline),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: PPRadius.inputRadius,
-        borderSide: BorderSide(color: scheme.primary, width: PPBorders.strong),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: PPRadius.inputRadius,
-        borderSide: BorderSide(color: scheme.error, width: PPBorders.regular),
-      ),
-    ),
-
     // T2: the modal barrier is the approved scrim — dark in BOTH themes.
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: scheme.surfaceContainerLow,
@@ -148,8 +123,9 @@ ThemeData _buildTheme(ColorScheme scheme, PPColors pp) {
     ),
 
     snackBarTheme: SnackBarThemeData(
-      backgroundColor:
-          isDark ? scheme.surfaceContainerHighest : PPPalette.slate,
+      backgroundColor: isDark
+          ? scheme.surfaceContainerHighest
+          : PPPalette.slate,
       contentTextStyle: ppTextTheme.bodyMedium?.copyWith(
         color: isDark ? scheme.onSurface : PPPalette.mist,
       ),

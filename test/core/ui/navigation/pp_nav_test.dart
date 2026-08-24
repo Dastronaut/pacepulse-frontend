@@ -66,4 +66,46 @@ void main() {
     expect(deco.color, ppDarkColorScheme.surface);
     expect(deco.border, isNotNull);
   });
+
+  testWidgets('standard app bar clears the status bar inset', (tester) async {
+    // iPhone-class inset: 59 logical points at devicePixelRatio 3.
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.padding = const FakeViewPadding(top: 177);
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: Scaffold(
+        appBar: PPAppBar.standard(title: 'Sign in', onBack: () {}),
+        body: const SizedBox(),
+      ),
+    ));
+
+    // The decorated box grows to cover the inset, so the `scrolledUnder`
+    // background keeps painting behind the status bar...
+    expect(
+      tester.getSize(find.byKey(const Key('pp_app_bar_box'))).height,
+      56 + 59,
+    );
+    // ...while the content sits entirely below it. Unfixed, the title renders
+    // at y 16.5-39.5 — under the notch, which is what shipped to the device.
+    expect(tester.getRect(find.text('Sign in')).top, greaterThanOrEqualTo(59.0));
+    expect(
+      tester.getRect(find.bySemanticsLabel('Back')).top,
+      greaterThanOrEqualTo(59.0),
+    );
+  });
+
+  testWidgets('app bar adds no height when there is no inset', (tester) async {
+    // Inline uses (the dev gallery specimens) and every existing test sit
+    // inside a body whose padding is already consumed, so nothing shifts.
+    await tester.pumpWidget(MaterialApp(
+      theme: ppDarkTheme(),
+      home: Scaffold(
+        appBar: PPAppBar.standard(title: 'Sign in', onBack: () {}),
+        body: const SizedBox(),
+      ),
+    ));
+    expect(tester.getSize(find.byKey(const Key('pp_app_bar_box'))).height, 56);
+  });
 }
