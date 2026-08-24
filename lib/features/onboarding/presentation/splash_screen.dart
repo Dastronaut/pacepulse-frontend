@@ -14,6 +14,8 @@ import '../../home/presentation/home_placeholder.dart';
 import '../data/onboarding_seen.dart';
 import '../domain/splash_destination.dart';
 import 'onboarding_carousel_screen.dart';
+import '../../auth/presentation/auth_landing_placeholder.dart';
+import '../../home/presentation/home_placeholder.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -36,6 +38,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     parent: _drawIn,
     curve: PPMotion.energetic,
   );
+  late final AnimationController _drawIn =
+      AnimationController(vsync: this, duration: PPMotion.deliberate);
+  late final Animation<double> _ringValue =
+      CurvedAnimation(parent: _drawIn, curve: PPMotion.energetic);
   Timer? _cap;
   bool _navigated = false;
 
@@ -51,6 +57,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       SplashScreen.maxDuration,
       () => _go(AuthLandingScreen.path),
     );
+    _cap = Timer(SplashScreen.maxDuration, () => _go(hasSession: false));
     if (ppReducedMotion(context)) {
       _drawIn.value = 1;
     } else {
@@ -86,6 +93,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _navigated = true;
     _cap?.cancel();
     context.go(path);
+    final hasSession = await ref
+        .read(sessionProvider.future)
+        .catchError((_) => false);
+    _go(hasSession: hasSession);
+  }
+
+  void _go({required bool hasSession}) {
+    if (_navigated || !mounted) return;
+    _navigated = true;
+    _cap?.cancel();
+    context
+        .go(hasSession ? HomePlaceholder.path : AuthLandingPlaceholder.path);
   }
 
   @override
@@ -120,6 +139,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               style: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.w800,
               ),
+              style: theme.textTheme.headlineLarge
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const Spacer(),
             Text(
@@ -127,6 +148,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               style: theme.textTheme.labelMedium?.copyWith(
                 color: pp.onSurfaceFaint,
               ),
+              style: theme.textTheme.labelMedium
+                  ?.copyWith(color: pp.onSurfaceFaint),
             ),
             const SizedBox(height: PPSpacing.s11),
           ],
