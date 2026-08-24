@@ -9,7 +9,10 @@ import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/sign_up_screen.dart';
 import '../../features/home/presentation/home_placeholder.dart';
 import '../../features/onboarding/presentation/onboarding_carousel_screen.dart';
+import '../../features/onboarding/presentation/profile_wizard_screen.dart';
 import '../../features/onboarding/presentation/splash_screen.dart';
+import '../../features/permissions/domain/permission_kind.dart';
+import '../../features/permissions/presentation/permission_priming_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -40,6 +43,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ResetPasswordScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: ProfileWizardScreen.path,
+        builder: (context, state) => const ProfileWizardScreen(),
+      ),
+      GoRoute(
+        path: PermissionPrimingScreen.path,
+        // A route parameter is untrusted input: an unknown kind sends the
+        // user Home rather than throwing on a stale deep link.
+        redirect: (context, state) =>
+            permissionKindFromName(state.pathParameters['kind']) == null
+            ? HomePlaceholder.path
+            : null,
+        builder: (context, state) => PermissionPrimingScreen(
+          kind: permissionKindFromName(state.pathParameters['kind'])!,
+          // TODO(permissions-slice): call permission_handler here once the
+          // dependency is approved. Both actions dismiss the primer either
+          // way — "Not now" is a real choice, not a dead end.
+          onAllow: () => context.pop(),
+          onNotNow: () => context.pop(),
+        ),
       ),
       GoRoute(
         path: HomePlaceholder.path,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
+import '../../onboarding/presentation/profile_wizard_screen.dart';
 import '../domain/auth_validators.dart';
 import 'sign_in_screen.dart';
 import 'sign_up_controller.dart';
@@ -59,6 +60,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       return;
     }
     controller.submit();
+    // S5: "social auth success, new user → wizard".
+    // TODO(auth-slice): move this inside the account call's success
+    // handler once it is real — a failed sign-up must not advance.
+    context.go(ProfileWizardScreen.path);
   }
 
   @override

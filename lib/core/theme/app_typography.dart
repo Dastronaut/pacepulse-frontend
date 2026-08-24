@@ -17,7 +17,7 @@ import 'package:google_fonts/google_fonts.dart';
 /// woff2/ttf files locally (google_fonts supports asset fonts) so the
 /// app doesn't fetch fonts at runtime.
 
-const List<FontFeature> _tabularFigures = [
+const List<FontFeature> ppTabularFigures = [
   FontFeature.tabularFigures(),
   FontFeature.liningFigures(),
 ];
@@ -37,21 +37,21 @@ final TextTheme ppTextTheme = TextTheme(
     fontWeight: FontWeight.w800,
     height: 0.95,
     letterSpacing: -0.72,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   ),
   displayMedium: GoogleFonts.inter(
     fontSize: 56,
     fontWeight: FontWeight.w800,
     height: 0.95,
     letterSpacing: -0.56,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   ),
   displaySmall: GoogleFonts.inter(
     fontSize: 44,
     fontWeight: FontWeight.w800,
     height: 0.95,
     letterSpacing: -0.44,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   ),
   headlineLarge: GoogleFonts.inter(
     fontSize: 34,
@@ -134,7 +134,7 @@ abstract final class PPTextStyles {
     fontSize: 160,
     fontWeight: FontWeight.w900,
     height: 1.0,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   );
 
   /// 40 — big pace / timer readouts.
@@ -142,7 +142,7 @@ abstract final class PPTextStyles {
     fontSize: 40,
     fontWeight: FontWeight.w700,
     height: 1.1,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   );
 
   /// 24 — secondary live metrics.
@@ -150,7 +150,7 @@ abstract final class PPTextStyles {
     fontSize: 24,
     fontWeight: FontWeight.w500,
     height: 1.1,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   );
 
   /// 16 — inline numeric values.
@@ -158,7 +158,7 @@ abstract final class PPTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w500,
     height: 1.1,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   );
 
   /// 13 — splits table.
@@ -166,6 +166,6 @@ abstract final class PPTextStyles {
     fontSize: 13,
     fontWeight: FontWeight.w500,
     height: 1.1,
-    fontFeatures: _tabularFigures,
+    fontFeatures: ppTabularFigures,
   );
 }
