@@ -9,7 +9,7 @@ import 'package:pacepulse/features/auth/presentation/auth_landing_screen.dart';
 import 'package:pacepulse/features/auth/presentation/reset_password_screen.dart';
 import 'package:pacepulse/features/auth/presentation/sign_in_screen.dart';
 import 'package:pacepulse/features/auth/presentation/sign_up_screen.dart';
-import 'package:pacepulse/features/home/presentation/home_placeholder.dart';
+import 'package:pacepulse/features/home/presentation/home_screen.dart';
 import 'package:pacepulse/features/onboarding/data/onboarding_seen.dart';
 import 'package:pacepulse/features/onboarding/domain/profile_draft.dart';
 import 'package:pacepulse/features/onboarding/presentation/onboarding_carousel_screen.dart';
@@ -36,7 +36,7 @@ void main() {
     expect(find.byType(OnboardingCarouselScreen), findsOneWidget);
   });
 
-  testWidgets('router navigates to the home placeholder', (tester) async {
+  testWidgets('router navigates to Home', (tester) async {
     // Seed seen=true so splash routes to auth, not carousel.
     await tester.pumpWidget(
       ProviderScope(
@@ -46,9 +46,9 @@ void main() {
     );
     await tester.pumpAndSettle();
     final ctx = tester.element(find.byType(AuthLandingScreen));
-    GoRouter.of(ctx).go(HomePlaceholder.path);
+    GoRouter.of(ctx).go(HomeScreen.path);
     await tester.pumpAndSettle();
-    expect(find.byType(HomePlaceholder), findsOneWidget);
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('router resolves the nested sign-up route to SignUpScreen', (
@@ -244,7 +244,7 @@ void main() {
     GoRouter.of(ctx).go('/permission/camera');
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.byType(HomePlaceholder), findsOneWidget);
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('a successful sign-up lands on the wizard', (tester) async {
@@ -326,7 +326,7 @@ void main() {
       // Skip ends the wizard exactly as Finish does — gear is never a wall.
       await tester.tap(find.byKey(const Key('wizard_step4_skip')));
       await tester.pumpAndSettle();
-      expect(find.byType(HomePlaceholder), findsOneWidget);
+      expect(find.byType(HomeScreen), findsOneWidget);
     },
   );
 }

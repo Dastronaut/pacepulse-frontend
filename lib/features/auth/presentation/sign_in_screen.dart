@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
-import '../../home/presentation/home_placeholder.dart';
+import '../../home/presentation/home_screen.dart';
 import '../domain/auth_validators.dart';
 import 'reset_password_screen.dart';
 import 'sign_in_controller.dart';
@@ -56,7 +56,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     controller.submit();
     // S5: "returning → Home".
     // TODO(auth-slice): move this inside the session call's success handler.
-    context.go(HomePlaceholder.path);
+    context.go(HomeScreen.path);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'pages/actions_page.dart';
 import 'pages/auth_page.dart';
 import 'pages/data_page.dart';
 import 'pages/foundations_page.dart';
+import 'pages/home_page.dart';
 import 'pages/inputs_page.dart';
 import 'pages/navigation_page.dart';
 import 'pages/specialized_page.dart';
@@ -25,6 +26,7 @@ final Map<String, WidgetBuilder> galleryPages = {
   'Specialized': (_) => const SpecializedGalleryPage(),
   'Auth': (_) => const AuthGalleryPage(),
   'Wizard': (_) => const WizardGalleryPage(),
+  'Home': (_) => const HomeGalleryPage(),
 };
 
 class GalleryScreen extends StatefulWidget {

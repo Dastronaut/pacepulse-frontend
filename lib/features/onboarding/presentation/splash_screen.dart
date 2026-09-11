@@ -10,7 +10,7 @@ import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
 import '../../auth/data/session.dart';
 import '../../auth/presentation/auth_landing_screen.dart';
-import '../../home/presentation/home_placeholder.dart';
+import '../../home/presentation/home_screen.dart';
 import '../data/onboarding_seen.dart';
 import '../domain/splash_destination.dart';
 import 'onboarding_carousel_screen.dart';
@@ -76,7 +76,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   String _pathFor(SplashDestination destination) => switch (destination) {
-    SplashDestination.home => HomePlaceholder.path,
+    SplashDestination.home => HomeScreen.path,
     SplashDestination.auth => AuthLandingScreen.path,
     SplashDestination.carousel => OnboardingCarouselScreen.path,
   };

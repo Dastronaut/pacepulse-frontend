@@ -7,12 +7,14 @@ import '../../features/auth/presentation/auth_landing_screen.dart';
 import '../../features/auth/presentation/reset_password_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/sign_up_screen.dart';
-import '../../features/home/presentation/home_placeholder.dart';
+import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_carousel_screen.dart';
 import '../../features/onboarding/presentation/profile_wizard_screen.dart';
 import '../../features/onboarding/presentation/splash_screen.dart';
 import '../../features/permissions/domain/permission_kind.dart';
 import '../../features/permissions/presentation/permission_priming_screen.dart';
+import '../../features/shell/presentation/app_shell.dart';
+import '../../features/shell/presentation/tab_placeholder.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -54,7 +56,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         // user Home rather than throwing on a stale deep link.
         redirect: (context, state) =>
             permissionKindFromName(state.pathParameters['kind']) == null
-            ? HomePlaceholder.path
+            ? HomeScreen.path
             : null,
         builder: (context, state) => PermissionPrimingScreen(
           kind: permissionKindFromName(state.pathParameters['kind'])!,
@@ -65,9 +67,38 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           onNotNow: () => context.pop(),
         ),
       ),
-      GoRoute(
-        path: HomePlaceholder.path,
-        builder: (context, state) => const HomePlaceholder(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            AppShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: HomeScreen.path,
+              builder: (context, state) => const HomeScreen(),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: HistoryScreen.path,
+              builder: (context, state) =>
+                  const TabPlaceholder(title: HistoryScreen.title),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: ChallengesScreen.path,
+              builder: (context, state) =>
+                  const TabPlaceholder(title: ChallengesScreen.title),
+            ),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(
+              path: ProfileScreen.path,
+              builder: (context, state) =>
+                  const TabPlaceholder(title: ProfileScreen.title),
+            ),
+          ]),
+        ],
       ),
       if (kDebugMode)
         GoRoute(

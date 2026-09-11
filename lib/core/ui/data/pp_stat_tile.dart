@@ -4,6 +4,8 @@ import '../../theme/theme.dart';
 import '../foundations/pp_icon.dart';
 import '../foundations/pp_pressable.dart';
 
+enum PPStatTone { positive, negative, neutral }
+
 /// Nested dashboard stat tile. Background role split: dark surfaceContainerHigh /
 /// light surfaceContainer (D1-B3; human ruling 2026-08-03: spec literals with
 /// documented provenance). Lives INSIDE cards.
@@ -14,6 +16,8 @@ class PPStatTile extends StatelessWidget {
     required this.label,
     required this.value,
     this.unit,
+    this.sub,
+    this.subTone = PPStatTone.neutral,
     this.onTap,
   });
 
@@ -21,6 +25,8 @@ class PPStatTile extends StatelessWidget {
   final String label;
   final String value;
   final String? unit;
+  final String? sub;
+  final PPStatTone subTone;
   final VoidCallback? onTap;
 
   @override
@@ -54,7 +60,7 @@ class PPStatTile extends StatelessWidget {
             children: [
               Text(value,
                   style: theme.textTheme.headlineSmall!.copyWith(
-                    fontFeatures: const [FontFeature.tabularFigures()],
+                    fontFeatures: ppTabularFigures,
                   )),
               if (unit != null) ...[
                 const SizedBox(width: PPSpacing.s1),
@@ -64,6 +70,23 @@ class PPStatTile extends StatelessWidget {
               ],
             ],
           ),
+          if (sub != null) ...[
+            const SizedBox(height: PPSpacing.s1),
+            Text(
+              sub!,
+              key: const Key('pp_stat_tile_sub'),
+              style: theme.textTheme.labelMedium!.copyWith(
+                color: switch (subTone) {
+                  PPStatTone.positive => pp.success,
+                  PPStatTone.negative => pp.warning,
+                  PPStatTone.neutral => pp.onSurfaceFaint,
+                },
+                fontFeatures: ppTabularFigures,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ],
       ),
     );

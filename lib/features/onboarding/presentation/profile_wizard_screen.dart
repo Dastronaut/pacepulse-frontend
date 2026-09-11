@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/theme.dart';
 import '../../../core/ui/ui.dart';
-import '../../home/presentation/home_placeholder.dart';
+import '../../home/presentation/home_screen.dart';
 import '../../permissions/domain/permission_kind.dart';
 import '../../permissions/presentation/permission_priming_screen.dart';
 import '../../permissions/presentation/primed_this_session.dart';
@@ -63,7 +63,7 @@ class _ProfileWizardScreenState extends ConsumerState<ProfileWizardScreen> {
 
   void _finish() {
     ref.read(wizardControllerProvider.notifier).finish();
-    context.go(HomePlaceholder.path);
+    context.go(HomeScreen.path);
   }
 
   @override
