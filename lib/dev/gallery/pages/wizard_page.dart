@@ -151,7 +151,8 @@ Widget _wizard(Widget child, {ProfileDraft? draft, GearScan? scan}) {
       wizardDefaultsProvider.overrideWithValue(_galleryDefaults),
       if (draft != null)
         wizardControllerProvider.overrideWith(() => _SeededWizard(draft)),
-      if (scan != null) gearScanProvider.overrideWith(() => _SeededScan(scan)),
+      if (scan != null)
+        gearScanControllerProvider.overrideWith(() => _SeededScan(scan)),
     ].cast(),
     child: child,
   );

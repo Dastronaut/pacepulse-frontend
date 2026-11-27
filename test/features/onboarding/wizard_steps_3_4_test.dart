@@ -24,7 +24,7 @@ Widget wrap(Widget child, {bool dark = true, GearScan? scan}) {
   final List<dynamic> overrides = [
     wizardDefaultsProvider.overrideWithValue(_defaults),
     if (scan != null)
-      gearScanProvider.overrideWith(() => _SeededGearScan(scan)),
+      gearScanControllerProvider.overrideWith(() => _SeededGearScan(scan)),
   ];
   return ProviderScope(
     overrides: overrides.cast(),

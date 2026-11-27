@@ -125,9 +125,9 @@ void main() {
 
   test('gear scan starts with the stub devices and rescans', () {
     final c = _container();
-    expect(c.read(gearScanProvider).status, GearScanStatus.found);
-    expect(c.read(gearScanProvider).devices, hasLength(2));
-    c.read(gearScanProvider.notifier).rescan();
-    expect(c.read(gearScanProvider).status, GearScanStatus.found);
+    expect(c.read(gearScanControllerProvider).status, GearScanStatus.found);
+    expect(c.read(gearScanControllerProvider).devices, hasLength(2));
+    c.read(gearScanControllerProvider.notifier).rescan();
+    expect(c.read(gearScanControllerProvider).status, GearScanStatus.found);
   });
 }

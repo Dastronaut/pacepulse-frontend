@@ -1,3 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final sessionProvider = FutureProvider<bool>((ref) async => false);
+part 'session.g.dart';
+
+@Riverpod(keepAlive: true)
+Future<bool> session(Ref ref) async => false;

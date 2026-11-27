@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/stub_home_repository.dart';
 import '../domain/home_summary.dart';
 
-final homeControllerProvider =
-    AsyncNotifierProvider.autoDispose<HomeController, HomeSummary>(
-      HomeController.new,
-    );
+part 'home_controller.g.dart';
 
-class HomeController extends AsyncNotifier<HomeSummary> {
+@riverpod
+class HomeController extends _$HomeController {
   static const initialTimeout = Duration(seconds: 3);
 
   Object? lastRefreshError;

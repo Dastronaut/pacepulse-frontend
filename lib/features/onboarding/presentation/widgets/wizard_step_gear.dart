@@ -22,7 +22,7 @@ class WizardStepGear extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pp = Theme.of(context).extension<PPColors>()!;
-    final scan = ref.watch(gearScanProvider);
+    final scan = ref.watch(gearScanControllerProvider);
 
     return WizardStepScaffold(
       overline: WizardCopy.step4Overline,
@@ -41,13 +41,13 @@ class WizardStepGear extends ConsumerWidget {
             title: WizardCopy.gearEmptyTitle,
             body: WizardCopy.gearEmptyBody,
             actionLabel: WizardCopy.gearEmptyAction,
-            onAction: ref.read(gearScanProvider.notifier).rescan,
+            onAction: ref.read(gearScanControllerProvider.notifier).rescan,
           )
         else if (scan.status == GearScanStatus.bluetoothOff)
           PPErrorState(
             title: WizardCopy.gearErrorTitle,
             body: WizardCopy.gearErrorBody,
-            onRetry: ref.read(gearScanProvider.notifier).rescan,
+            onRetry: ref.read(gearScanControllerProvider.notifier).rescan,
           )
         else
           for (final (i, device) in scan.devices.indexed) ...[

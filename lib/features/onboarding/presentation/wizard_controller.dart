@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart' show WidgetsBinding;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/profile_draft.dart';
+
+part 'wizard_controller.g.dart';
 
 class WizardDefaults {
   const WizardDefaults({required this.unitSystem, required this.currentYear});
@@ -10,7 +12,8 @@ class WizardDefaults {
   final int currentYear;
 }
 
-final wizardDefaultsProvider = Provider<WizardDefaults>((ref) {
+@Riverpod(keepAlive: true)
+WizardDefaults wizardDefaults(Ref ref) {
   const imperialCountries = {'US', 'LR', 'MM', 'GB'};
   final locale = WidgetsBinding.instance.platformDispatcher.locale;
   return WizardDefaults(
@@ -19,7 +22,7 @@ final wizardDefaultsProvider = Provider<WizardDefaults>((ref) {
         : UnitSystem.metric,
     currentYear: DateTime.now().year,
   );
-});
+}
 
 class WizardState {
   const WizardState({required this.draft, this.step = 0});
@@ -41,7 +44,8 @@ class WizardState {
       WizardState(draft: draft ?? this.draft, step: step ?? this.step);
 }
 
-class WizardController extends Notifier<WizardState> {
+@Riverpod(keepAlive: true)
+class WizardController extends _$WizardController {
   @override
   WizardState build() => WizardState(
     draft: ProfileDraft(
@@ -110,9 +114,6 @@ class WizardController extends Notifier<WizardState> {
   void finish() {}
 }
 
-final wizardControllerProvider =
-    NotifierProvider<WizardController, WizardState>(WizardController.new);
-
 // ---------------------------------------------------------------------------
 // Step 4 gear scan — stubbed.
 // ---------------------------------------------------------------------------
@@ -141,7 +142,8 @@ class GearScan {
   ];
 }
 
-class GearScanController extends Notifier<GearScan> {
+@riverpod
+class GearScanController extends _$GearScanController {
   @override
   GearScan build() {
     // TODO(wizard-slice): start the real BLE scan here; it will begin in
@@ -151,8 +153,3 @@ class GearScanController extends Notifier<GearScan> {
 
   void rescan() => state = const GearScan();
 }
-
-final gearScanProvider =
-    NotifierProvider.autoDispose<GearScanController, GearScan>(
-      GearScanController.new,
-    );

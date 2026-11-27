@@ -1,6 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/auth_validators.dart';
+
+part 'sign_up_controller.g.dart';
 
 class SignUpState {
   const SignUpState({
@@ -42,7 +44,8 @@ class SignUpState {
   }
 }
 
-class SignUpController extends Notifier<SignUpState> {
+@riverpod
+class SignUpController extends _$SignUpController {
   @override
   SignUpState build() => const SignUpState();
 
@@ -88,8 +91,3 @@ class SignUpController extends Notifier<SignUpState> {
   void onSignUpFailed(String message) =>
       state = state.copyWith(emailError: message, submitting: false);
 }
-
-final signUpControllerProvider =
-    NotifierProvider.autoDispose<SignUpController, SignUpState>(
-      SignUpController.new,
-    );

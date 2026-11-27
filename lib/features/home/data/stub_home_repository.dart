@@ -1,13 +1,14 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/activity.dart';
 import '../domain/daily_rings.dart';
 import '../domain/home_repository.dart';
 import '../domain/home_summary.dart';
 
-final homeRepositoryProvider = Provider<HomeRepository>(
-  (ref) => const StubHomeRepository(),
-);
+part 'stub_home_repository.g.dart';
+
+@Riverpod(keepAlive: true)
+HomeRepository homeRepository(Ref ref) => const StubHomeRepository();
 
 class StubHomeRepository implements HomeRepository {
   const StubHomeRepository({

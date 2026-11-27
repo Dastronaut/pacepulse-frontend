@@ -1,7 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/di/prefs.dart';
+
+part 'onboarding_seen.g.dart';
 
 class OnboardingSeenStore {
   OnboardingSeenStore(this._prefs);
@@ -15,10 +17,10 @@ class OnboardingSeenStore {
   Future<void> markSeen() async => (await _prefs).setBool(key, true);
 }
 
-final onboardingSeenStoreProvider = Provider<OnboardingSeenStore>(
-  (ref) => OnboardingSeenStore(ref.watch(sharedPreferencesProvider.future)),
-);
+@Riverpod(keepAlive: true)
+OnboardingSeenStore onboardingSeenStore(Ref ref) =>
+    OnboardingSeenStore(ref.watch(sharedPreferencesProvider.future));
 
-final onboardingSeenProvider = FutureProvider<bool>(
-  (ref) => ref.watch(onboardingSeenStoreProvider).read(),
-);
+@Riverpod(keepAlive: true)
+Future<bool> onboardingSeen(Ref ref) =>
+    ref.watch(onboardingSeenStoreProvider).read();

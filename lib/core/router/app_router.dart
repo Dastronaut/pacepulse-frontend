@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../dev/gallery/gallery.dart';
 import '../../features/auth/presentation/auth_landing_screen.dart';
@@ -16,7 +16,10 @@ import '../../features/permissions/presentation/permission_priming_screen.dart';
 import '../../features/shell/presentation/app_shell.dart';
 import '../../features/shell/presentation/tab_placeholder.dart';
 
-final appRouterProvider = Provider<GoRouter>((ref) {
+part 'app_router.g.dart';
+
+@Riverpod(keepAlive: true)
+GoRouter appRouter(Ref ref) {
   return GoRouter(
     initialLocation: SplashScreen.path,
     routes: [
@@ -107,4 +110,4 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
     ],
   );
-});
+}
