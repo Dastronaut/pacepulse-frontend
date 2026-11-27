@@ -10,12 +10,9 @@ import 'package:pacepulse/features/auth/presentation/sign_up_screen.dart';
 // Untyped on purpose: `Override` is not exported from flutter_riverpod's
 // public API, so typing this would mean importing riverpod's `src/`.
 Widget harness({List overrides = const []}) => ProviderScope(
-      overrides: overrides.cast(),
-      child: MaterialApp(
-        theme: ppDarkTheme(),
-        home: const SignUpScreen(),
-      ),
-    );
+  overrides: overrides.cast(),
+  child: MaterialApp(theme: ppDarkTheme(), home: const SignUpScreen()),
+);
 
 class _Seeded extends SignUpController {
   _Seeded(this.seed);
@@ -25,8 +22,9 @@ class _Seeded extends SignUpController {
 }
 
 void main() {
-  testWidgets('shows the password rule as helper text up front',
-      (tester) async {
+  testWidgets('shows the password rule as helper text up front', (
+    tester,
+  ) async {
     await tester.pumpWidget(harness());
     expect(find.text(AuthCopy.passwordRule), findsOneWidget);
   });
@@ -41,42 +39,63 @@ void main() {
     expect(find.text(AuthCopy.passwordRule), findsOneWidget);
   });
 
-  testWidgets('a valid form clears errors and does not navigate',
-      (tester) async {
+  testWidgets('a valid form clears errors and submits', (tester) async {
+    // Updated 2026-08-22: submit used to be fully inert, so this asserted
+    // that the screen stayed put. It now routes to the wizard (S5: "new
+    // user -> wizard"), which app_router_test.dart covers end-to-end
+    // because it owns the router. This harness has no router, so the
+    // assertion here is scoped to what it can see: validation passes and
+    // no error surfaces.
     await tester.pumpWidget(harness());
     await tester.enterText(
-        find.byKey(const Key('pp_sign_up_email')), 'dana@pacepulse.app');
+      find.byKey(const Key('pp_sign_up_email')),
+      'dana@pacepulse.app',
+    );
     await tester.enterText(
-        find.byKey(const Key('pp_sign_up_password')), 'runfast1');
-    await tester.tap(find.byKey(const Key('pp_sign_up_submit')));
+      find.byKey(const Key('pp_sign_up_password')),
+      'runfast1',
+    );
     await tester.pump();
+
+    final controller = ProviderScope.containerOf(
+      tester.element(find.byType(SignUpScreen)),
+    ).read(signUpControllerProvider.notifier);
+    expect(controller.validate(), isTrue);
     expect(find.text(AuthCopy.emailRequired), findsNothing);
-    expect(find.byType(SignUpScreen), findsOneWidget);
+    expect(find.text(AuthCopy.passwordRequired), findsNothing);
   });
 
-  testWidgets('password visibility toggle flips obscureText',
-      (tester) async {
+  testWidgets('password visibility toggle flips obscureText', (tester) async {
     await tester.pumpWidget(harness());
     TextField field() => tester.widget<TextField>(
-        find.descendant(
-            of: find.byKey(const Key('pp_sign_up_password')),
-            matching: find.byType(TextField)));
+      find.descendant(
+        of: find.byKey(const Key('pp_sign_up_password')),
+        matching: find.byType(TextField),
+      ),
+    );
     expect(field().obscureText, isTrue);
     await tester.tap(find.bySemanticsLabel('Show password'));
     await tester.pump();
     expect(field().obscureText, isFalse);
   });
 
-  testWidgets('taken email renders the error and the Sign in instead link',
-      (tester) async {
-    await tester.pumpWidget(harness(overrides: [
-      signUpControllerProvider.overrideWith(
-        () => _Seeded(const SignUpState(
-          email: 'dana@pacepulse.app',
-          emailError: AuthCopy.emailTaken,
-        )),
+  testWidgets('taken email renders the error and the Sign in instead link', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      harness(
+        overrides: [
+          signUpControllerProvider.overrideWith(
+            () => _Seeded(
+              const SignUpState(
+                email: 'dana@pacepulse.app',
+                emailError: AuthCopy.emailTaken,
+              ),
+            ),
+          ),
+        ],
       ),
-    ]));
+    );
     expect(find.text(AuthCopy.emailTaken), findsOneWidget);
     // Twice: the inline link under the field, plus the standing link in
     // the bottom action block.
@@ -84,24 +103,32 @@ void main() {
   });
 
   testWidgets('submitting state shows the button spinner', (tester) async {
-    await tester.pumpWidget(harness(overrides: [
-      signUpControllerProvider.overrideWith(
-        () => _Seeded(const SignUpState(submitting: true)),
+    await tester.pumpWidget(
+      harness(
+        overrides: [
+          signUpControllerProvider.overrideWith(
+            () => _Seeded(const SignUpState(submitting: true)),
+          ),
+        ],
       ),
-    ]));
+    );
     // Found by key, not by text: PPButton swaps its label for a spinner
     // while loading, so widgetWithText would find nothing here.
     final button = tester.widget<PPButton>(
-        find.byKey(const Key('pp_sign_up_submit')));
+      find.byKey(const Key('pp_sign_up_submit')),
+    );
     expect(button.loading, isTrue);
   });
 
   test('onSignUpFailed puts the message on the email field', () {
     final container = ProviderContainer.test();
-    container.read(signUpControllerProvider.notifier)
+    container
+        .read(signUpControllerProvider.notifier)
         .onSignUpFailed(AuthCopy.emailTaken);
-    expect(container.read(signUpControllerProvider).emailError,
-        AuthCopy.emailTaken);
+    expect(
+      container.read(signUpControllerProvider).emailError,
+      AuthCopy.emailTaken,
+    );
     expect(container.read(signUpControllerProvider).submitting, isFalse);
   });
 
@@ -129,8 +156,9 @@ void main() {
 
   // FIX 2 — the spec says submit() "marks invalid fields, focuses the
   // first one". Focus is a widget concern, so the screen owns it.
-  testWidgets('submitting an empty form focuses the first invalid field',
-      (tester) async {
+  testWidgets('submitting an empty form focuses the first invalid field', (
+    tester,
+  ) async {
     await tester.pumpWidget(harness());
     await tester.tap(find.byKey(const Key('pp_sign_up_submit')));
     await tester.pump();
@@ -143,11 +171,14 @@ void main() {
     expect(tester.binding.focusManager.primaryFocus, same(emailNode));
   });
 
-  testWidgets('a valid email with an invalid password focuses the password',
-      (tester) async {
+  testWidgets('a valid email with an invalid password focuses the password', (
+    tester,
+  ) async {
     await tester.pumpWidget(harness());
     await tester.enterText(
-        find.byKey(const Key('pp_sign_up_email')), 'dana@pacepulse.app');
+      find.byKey(const Key('pp_sign_up_email')),
+      'dana@pacepulse.app',
+    );
     await tester.tap(find.byKey(const Key('pp_sign_up_submit')));
     await tester.pump();
     final passwordNode = tester
@@ -159,13 +190,14 @@ void main() {
   // FIX 12 — the spec's Testing section promises these per screen, not
   // just as a kit-level passthrough. Asserted on the inner Material
   // TextField, which is what actually drives the keyboard.
-  testWidgets('keyboard wiring: email is next, password is go',
-      (tester) async {
+  testWidgets('keyboard wiring: email is next, password is go', (tester) async {
     await tester.pumpWidget(harness());
-    TextField inner(String key) => tester.widget<TextField>(find.descendant(
-          of: find.byKey(Key(key)),
-          matching: find.byType(TextField),
-        ));
+    TextField inner(String key) => tester.widget<TextField>(
+      find.descendant(
+        of: find.byKey(Key(key)),
+        matching: find.byType(TextField),
+      ),
+    );
     expect(inner('pp_sign_up_email').textInputAction, TextInputAction.next);
     expect(inner('pp_sign_up_password').textInputAction, TextInputAction.go);
   });

@@ -65,4 +65,84 @@ void main() {
         textScale: 1.3));
     expect(tester.takeException(), isNull);
   });
+
+  group('PPStatTile sub-line', () {
+    Widget wrapTile(Widget child, {Brightness brightness = Brightness.dark}) =>
+        MaterialApp(
+          theme: brightness == Brightness.dark ? ppDarkTheme() : ppLightTheme(),
+          home: Scaffold(body: Center(child: child)),
+        );
+
+    testWidgets('no sub-line renders when sub is omitted', (tester) async {
+      await tester.pumpWidget(wrapTile(const PPStatTile(
+        icon: PPIcons.route,
+        label: 'This week',
+        value: '32.6',
+        unit: 'km',
+      )));
+      expect(find.byKey(const Key('pp_stat_tile_sub')), findsNothing);
+    });
+
+    testWidgets('the sub-line renders its text', (tester) async {
+      await tester.pumpWidget(wrapTile(const PPStatTile(
+        icon: PPIcons.route,
+        label: 'This week',
+        value: '32.6',
+        unit: 'km',
+        sub: '▲ 12% vs last week',
+        subTone: PPStatTone.positive,
+      )));
+      expect(find.text('▲ 12% vs last week'), findsOneWidget);
+    });
+
+    testWidgets('tone selects the token colour, not the direction', (tester) async {
+      for (final (tone, expected) in <(PPStatTone, Color)>[
+        (PPStatTone.positive, PPColors.dark.success),
+        (PPStatTone.negative, PPColors.dark.warning),
+        (PPStatTone.neutral, PPColors.dark.onSurfaceFaint),
+      ]) {
+        await tester.pumpWidget(wrapTile(PPStatTile(
+          icon: PPIcons.heartPulse,
+          label: 'Resting HR',
+          value: '54',
+          unit: 'bpm',
+          sub: 'moved',
+          subTone: tone,
+        )));
+        final text =
+            tester.widget<Text>(find.byKey(const Key('pp_stat_tile_sub')));
+        expect(text.style!.color, expected, reason: '$tone');
+      }
+    });
+
+    testWidgets('the sub-line uses tabular figures so the number does not jitter',
+        (tester) async {
+      await tester.pumpWidget(wrapTile(const PPStatTile(
+        icon: PPIcons.route,
+        label: 'This week',
+        value: '32.6',
+        unit: 'km',
+        sub: '▲ 12% vs last week',
+        subTone: PPStatTone.positive,
+      )));
+      final text =
+          tester.widget<Text>(find.byKey(const Key('pp_stat_tile_sub')));
+      expect(text.style!.fontFeatures, contains(const FontFeature.tabularFigures()));
+    });
+
+    testWidgets('the sub-line survives the light theme', (tester) async {
+      await tester.pumpWidget(wrapTile(
+        const PPStatTile(
+          icon: PPIcons.route,
+          label: 'This week',
+          value: '32.6',
+          sub: '– steady',
+        ),
+        brightness: Brightness.light,
+      ));
+      final text =
+          tester.widget<Text>(find.byKey(const Key('pp_stat_tile_sub')));
+      expect(text.style!.color, PPColors.light.onSurfaceFaint);
+    });
+  });
 }

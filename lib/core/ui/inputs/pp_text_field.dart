@@ -26,6 +26,7 @@ class PPTextField extends StatefulWidget {
     this.onSubmitted,
     this.focusNode,
     this.autofillHints,
+    this.tabularFigures = false,
   });
 
   final String label;
@@ -45,6 +46,8 @@ class PPTextField extends StatefulWidget {
 
   final FocusNode? focusNode;
   final Iterable<String>? autofillHints;
+
+  final bool tabularFigures;
 
   @override
   State<PPTextField> createState() => _PPTextFieldState();
@@ -159,6 +162,9 @@ class _PPTextFieldState extends State<PPTextField> {
                         color: widget.enabled
                             ? scheme.onSurface
                             : pp.onSurfaceDisabled,
+                        fontFeatures: widget.tabularFigures
+                            ? ppTabularFigures
+                            : null,
                       ),
                       decoration: InputDecoration(
                         isCollapsed: true,
@@ -173,6 +179,9 @@ class _PPTextFieldState extends State<PPTextField> {
                         hintText: widget.hint,
                         hintStyle: theme.textTheme.bodyMedium!.copyWith(
                           color: pp.onSurfaceFaint,
+                          fontFeatures: widget.tabularFigures
+                              ? ppTabularFigures
+                              : null,
                         ),
                       ),
                     ),

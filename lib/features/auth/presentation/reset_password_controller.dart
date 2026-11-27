@@ -1,8 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/auth_validators.dart';
+
+part 'reset_password_controller.g.dart';
 
 const kResendCooldown = Duration(seconds: 30);
 
@@ -47,7 +49,8 @@ class ResetPasswordState {
   }
 }
 
-class ResetPasswordController extends Notifier<ResetPasswordState> {
+@riverpod
+class ResetPasswordController extends _$ResetPasswordController {
   Timer? _timer;
 
   @override
@@ -97,8 +100,3 @@ class ResetPasswordController extends Notifier<ResetPasswordState> {
     });
   }
 }
-
-final resetPasswordControllerProvider =
-    NotifierProvider.autoDispose<ResetPasswordController, ResetPasswordState>(
-      ResetPasswordController.new,
-    );

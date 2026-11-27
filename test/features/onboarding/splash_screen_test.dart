@@ -9,7 +9,7 @@ import 'package:pacepulse/core/theme/theme.dart';
 import 'package:pacepulse/core/ui/ui.dart';
 import 'package:pacepulse/features/auth/data/session.dart';
 import 'package:pacepulse/features/auth/presentation/auth_landing_screen.dart';
-import 'package:pacepulse/features/home/presentation/home_placeholder.dart';
+import 'package:pacepulse/features/home/presentation/home_screen.dart';
 import 'package:pacepulse/features/onboarding/data/onboarding_seen.dart';
 import 'package:pacepulse/features/onboarding/presentation/onboarding_carousel_screen.dart';
 import 'package:pacepulse/features/onboarding/presentation/splash_screen.dart';
@@ -30,8 +30,8 @@ Widget harness({bool reducedMotion = false, List overrides = const []}) {
           path: AuthLandingScreen.path,
           builder: (context, state) => const AuthLandingScreen()),
       GoRoute(
-          path: HomePlaceholder.path,
-          builder: (context, state) => const HomePlaceholder()),
+          path: HomeScreen.path,
+          builder: (context, state) => const HomeScreen()),
       GoRoute(
           path: OnboardingCarouselScreen.path,
           builder: (context, state) => const OnboardingCarouselScreen()),
@@ -120,16 +120,24 @@ void main() {
       overrides: [sessionProvider.overrideWith((ref) async => true)],
     ));
     await tester.pumpAndSettle();
-    expect(find.byType(HomePlaceholder), findsOneWidget);
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('reduced motion: ring is complete immediately, still navigates',
       (tester) async {
-    await tester.pumpWidget(harness(reducedMotion: true));
+    // Reduced motion skips the draw-in, so _start reaches context.go within
+    // pumpWidget's microtask drain. Hold the session read open, or the splash
+    // is already gone by the time the ring is inspected.
+    final gate = Completer<bool>();
+    await tester.pumpWidget(harness(
+      reducedMotion: true,
+      overrides: [sessionProvider.overrideWith((ref) => gate.future)],
+    ));
     await tester.pump(); // post-frame _start has set the static value
     final ring =
         tester.widget<PPActivityRing>(find.byType(PPActivityRing));
     expect(ring.value, 1.0);
+    gate.complete(false);
     // Navigation to carousel; pumpAndSettle would hang due to looping animation.
     // Pump past async reads.
     await tester.pump(const Duration(milliseconds: 50));

@@ -1,6 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/auth_validators.dart';
+
+part 'sign_in_controller.g.dart';
 
 const kSuggestResetAfter = 5;
 
@@ -50,7 +52,8 @@ class SignInState {
   }
 }
 
-class SignInController extends Notifier<SignInState> {
+@riverpod
+class SignInController extends _$SignInController {
   @override
   SignInState build() => const SignInState();
 
@@ -93,8 +96,3 @@ class SignInController extends Notifier<SignInState> {
     failedAttempts: state.failedAttempts + 1,
   );
 }
-
-final signInControllerProvider =
-    NotifierProvider.autoDispose<SignInController, SignInState>(
-      SignInController.new,
-    );
