@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/theme.dart';
 import 'pages/actions_page.dart';
+import 'pages/auth_page.dart';
 import 'pages/data_page.dart';
 import 'pages/foundations_page.dart';
+import 'pages/home_page.dart';
 import 'pages/inputs_page.dart';
 import 'pages/navigation_page.dart';
 import 'pages/specialized_page.dart';
 import 'pages/status_page.dart';
+import 'pages/wizard_page.dart';
 
 export 'pages/foundations_page.dart';
 
@@ -21,10 +24,15 @@ final Map<String, WidgetBuilder> galleryPages = {
   'Inputs': (_) => const InputsGalleryPage(),
   'Navigation': (_) => const NavigationGalleryPage(),
   'Specialized': (_) => const SpecializedGalleryPage(),
+  'Auth': (_) => const AuthGalleryPage(),
+  'Wizard': (_) => const WizardGalleryPage(),
+  'Home': (_) => const HomeGalleryPage(),
 };
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
+
+  static const path = '/gallery';
 
   @override
   State<GalleryScreen> createState() => _GalleryScreenState();
@@ -54,11 +62,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ),
             IconButton(
               tooltip: 'Toggle reduced motion',
-              icon: Icon(_reducedMotion
-                  ? Icons.motion_photos_off
-                  : Icons.motion_photos_on),
-              onPressed: () =>
-                  setState(() => _reducedMotion = !_reducedMotion),
+              icon: Icon(
+                _reducedMotion
+                    ? Icons.motion_photos_off
+                    : Icons.motion_photos_on,
+              ),
+              onPressed: () => setState(() => _reducedMotion = !_reducedMotion),
             ),
           ],
         ),
@@ -103,9 +112,7 @@ class GalleryFrame extends StatelessWidget {
       child: MediaQuery(
         data: MediaQuery.of(context).copyWith(disableAnimations: reducedMotion),
         child: ColoredBox(
-          color: dark
-              ? ppDarkColorScheme.surface
-              : ppLightColorScheme.surface,
+          color: dark ? ppDarkColorScheme.surface : ppLightColorScheme.surface,
           child: child,
         ),
       ),
@@ -125,7 +132,11 @@ class GallerySection extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(
-          PPSpacing.padScreen, PPSpacing.s4, PPSpacing.padScreen, PPSpacing.s4),
+        PPSpacing.padScreen,
+        PPSpacing.s4,
+        PPSpacing.padScreen,
+        PPSpacing.s4,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pacepulse/core/ui/ui.dart';
 
 void main() {
-  test('registry exposes 36 unique icons', () {
-    expect(PPIcons.all.length, 36);
-    expect(PPIcons.all.toSet().length, 36);
+  test('registry exposes 38 unique icons', () {
+    expect(PPIcons.all.length, 38);
+    expect(PPIcons.all.toSet().length, 38);
   });
 
   testWidgets('PPIcon renders at requested size with explicit color',
